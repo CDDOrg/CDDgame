@@ -5,4 +5,5 @@ package com.school.zephania.ccdgame.model;
  */
 
 public class player {
+
 }
