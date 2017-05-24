@@ -8,8 +8,9 @@
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <SurfaceView android:id="@+id/SurfaceView_game"
-        android:layout_width="fill_parent" android:layout_height="fill_parent"></SurfaceView>
+    <com.school.zephania.ccdgame.view.GameView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
