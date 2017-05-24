@@ -19,5 +19,9 @@ public class God {
     private void paintGame(Canvas canvas){
 
     }
+
+    public void gameLogic() {
+
+    }
 }
 
