@@ -10,7 +10,9 @@
          TextureView, etc. -->
     <com.school.zephania.ccdgame.view.GameView
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+        android:id="@+id/gameview"
+        />
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
