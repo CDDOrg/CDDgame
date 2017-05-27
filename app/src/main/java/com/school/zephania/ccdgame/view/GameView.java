@@ -38,7 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
             holder=getHolder();
             while(threadFlag)
             {
-                //god.gameLogic(); //后台逻辑
+                god.gameLogic();
                 try {
                     canvas = holder.lockCanvas();
                     myDraw(canvas);
@@ -59,7 +59,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
 
     public GameView(Context context,CCDgame ccd){
         super(context);
-        God god = new God();
+        this.ccd=ccd;
+        god = new God(ccd);
         gameBackGround=BitmapFactory.decodeResource(getResources(), R.drawable.backgroundgaming);
         this.setOnTouchListener(this);
         this.getHolder().addCallback(this);
@@ -87,11 +88,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
 
 
     protected void  myDraw(Canvas canvas){
-
-        canvas.drawBitmap(gameBackGround,src,dst,null);
-        for(int i=0;i<4;i++){
-            player[i].paint(canvas);
-        }
+        Log.d("text","can get myDraw");
+            god.paint(canvas);
     }
 
 
