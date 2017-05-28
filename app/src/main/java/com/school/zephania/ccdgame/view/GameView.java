@@ -12,10 +12,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
 
-import com.school.zephania.ccdgame.CCDgame;
-import com.school.zephania.ccdgame.R;
 import com.school.zephania.ccdgame.model.God;
 import com.school.zephania.ccdgame.model.Player;
 
@@ -24,13 +21,10 @@ import com.school.zephania.ccdgame.model.Player;
  */
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
-    God god;
-    Bitmap gameBackGround;
-    int mWidth,mHeight;
-    CCDgame ccd;
-    SurfaceHolder holder;
-    boolean threadFlag=true;
-    Canvas canvas;
+    private God god;
+    private SurfaceHolder holder;
+    private boolean threadFlag=true;
+    private Canvas canvas;
 
     Thread gameThread = new Thread() {
         @Override
@@ -54,41 +48,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
         }
 
     };
-    //players are temp for test
-    Player[] player= new Player[4];
 
-    public GameView(Context context,CCDgame ccd){
+    public GameView(Context context){
         super(context);
-        this.ccd=ccd;
-        god = new God(ccd);
-        gameBackGround=BitmapFactory.decodeResource(getResources(), R.drawable.backgroundgaming);
+        god = new God(context);
         this.setOnTouchListener(this);
         this.getHolder().addCallback(this);
-
-
-
-        WindowManager wm = (WindowManager) getContext()
-                .getSystemService(Context.WINDOW_SERVICE);
-
-        int width = wm.getDefaultDisplay().getWidth();
-        int height = wm.getDefaultDisplay().getHeight();
-        src= new Rect(0,0,gameBackGround.getWidth(),gameBackGround.getHeight());
-        dst= new Rect(0,0,width,height);
-        mHeight=height;
-        mWidth=width;
-
-        player[0] = new Player(ccd,10,mHeight/4);
-        player[1] = new Player(ccd,mWidth*5/20,10);
-        player[2] = new Player(ccd,mWidth*18/20,mHeight/4);
-        player[3] = new Player(ccd,mWidth*5/20,mHeight*3/4);
     }
 
-    Rect src;
-    Rect dst;
-
-
     protected void  myDraw(Canvas canvas){
-        Log.d("text","can get myDraw");
             god.paint(canvas);
     }
 
@@ -101,7 +69,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     }
-
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         threadFlag=true;

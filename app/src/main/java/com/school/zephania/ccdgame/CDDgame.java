@@ -16,7 +16,7 @@ import com.school.zephania.ccdgame.view.GameView;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class CCDgame extends Activity {
+public class CDDgame extends Activity {
     private GameView gameView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +24,7 @@ public class CCDgame extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        gameView = new GameView(this,this);
+        gameView = new GameView(this);
         setContentView(gameView);
-
-
     }
-
-
-
-
 }

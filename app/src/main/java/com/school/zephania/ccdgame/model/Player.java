@@ -1,5 +1,6 @@
 package com.school.zephania.ccdgame.model;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,6 +12,7 @@ import com.school.zephania.ccdgame.CCDgame;
 import com.school.zephania.ccdgame.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -22,15 +24,19 @@ public class Player {
     int x;
     int y;
     String name= "binke";
-    ArrayList<Card>
+    Context ccd;
+    ArrayList<Card> handCards;
 
-    public Player(CCDgame ccd,int x,int y)
+    public void setHandCards(List cards){
+        handCards = (ArrayList<Card>) cards;
+    }
+    public void setView(Context cdd, int x, int y)
     {
         head=BitmapFactory.decodeResource(ccd.getResources(),R.drawable.headbinke);
         this.x=x;
         this.y=y;
     }
-    public Player(CCDgame ccd,int x,int y,Bitmap head){
+    public void setView(Context ccd,int x,int y,Bitmap head){
         this.head=head;
         this.x=x;
         this.y=y;
