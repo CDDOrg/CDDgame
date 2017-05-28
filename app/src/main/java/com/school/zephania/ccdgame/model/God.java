@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import com.school.zephania.ccdgame.R;
 import java.util.ArrayList;
@@ -28,19 +29,20 @@ public class God {
     private Bitmap gameBackGround;
     private int mWidth,mHeight;
     private Player[] player= new Player[4];
-
-
+    private int cardMargin=50;
 
     private void viewInit(){
-        gameBackGround= BitmapFactory.decodeResource(cdd.getResources(), R.drawable.backgroundgaming);
-        WindowManager wm = (WindowManager) cdd.
-                getSystemService(Context.WINDOW_SERVICE);
+        //获取屏幕宽高
+        DisplayMetrics dm;
+        dm = cdd.getResources().getDisplayMetrics();
+        mWidth = dm.widthPixels;// 宽度
+        mHeight = dm.heightPixels;// 高度
 
-        mWidth = wm.getDefaultDisplay().getWidth();
-        mHeight = wm.getDefaultDisplay().getHeight();
+        //设定背景区域
         BackSrc= new Rect(0,0,gameBackGround.getWidth(),gameBackGround.getHeight());
         BackDst= new Rect(0,0,mWidth,mHeight);
 
+        //设定头像区域
         player[0].setView(cdd,10,mHeight/4);
         player[1].setView(cdd,mWidth*5/20,10);
         player[2].setView(cdd,mWidth*18/20,mHeight/4);
@@ -48,6 +50,7 @@ public class God {
         //初始化卡牌图片
         for (int i=0;i<52;i++)
          cards.get(i).setImage(BitmapFactory.decodeResource(cdd.getResources(),R.drawable.card1+i));
+
 
     }
     public void paint(Canvas canvas){
@@ -57,6 +60,7 @@ public class God {
                 break;
         }
     }
+
     private void paintGame(Canvas canvas){
         //画背景
         canvas.drawBitmap(gameBackGround,BackSrc,BackDst,null);
@@ -66,7 +70,8 @@ public class God {
             player[i].paint(canvas);
         }
         //画牌
-
+        for (int i=0;i<player[3].getHandCard().size();i++)
+            player[3].getHandCard().get(i).paint(canvas,mWidth/4+300+i*cardMargin,mHeight*3/4,false);
     }
 
 
@@ -90,7 +95,9 @@ public class God {
         for (int i=0;i<52;i++)
             cards.add(new Card());
         viewInit();
-        player[0].setHandCards(cards.subList(0,12));
+
+        //为绘制图像使用的简陋发牌。
+        player[1].setHandCards(cards.subList(0,12));
 
     }
     void gaming(){

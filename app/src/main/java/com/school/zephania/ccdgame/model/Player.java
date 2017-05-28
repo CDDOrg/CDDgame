@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.school.zephania.ccdgame.CCDgame;
 import com.school.zephania.ccdgame.R;
 
 import java.util.ArrayList;
@@ -41,6 +40,9 @@ public class Player {
         this.x=x;
         this.y=y;
     }
+    public ArrayList<Card> getHandCard(){
+        return handCards;
+    }
     public void paint(Canvas canvas){
         //画头像
         Rect src = new Rect(80,0,head.getWidth(),head.getHeight());
@@ -53,8 +55,6 @@ public class Player {
         textpaint.setTextSize(40);
         textpaint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(name,dst.centerX(),dst.bottom-15,textpaint);
-        //画牌
-
     }
 
 }
