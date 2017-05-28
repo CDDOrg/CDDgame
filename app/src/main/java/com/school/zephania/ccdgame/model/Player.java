@@ -9,9 +9,10 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.school.zephania.ccdgame.R;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.school.zephania.ccdgame.CDDgame.cdd;
 
 
 /**
@@ -23,19 +24,18 @@ public class Player {
     int x;
     int y;
     String name= "binke";
-    Context ccd;
     ArrayList<Card> handCards;
 
     public void setHandCards(List cards){
-        handCards = (ArrayList<Card>) cards;
+        handCards =new ArrayList<>(cards);
     }
-    public void setView(Context cdd, int x, int y)
+    public void setView( int x, int y)
     {
-        head=BitmapFactory.decodeResource(ccd.getResources(),R.drawable.headbinke);
+        head=BitmapFactory.decodeResource(cdd.getResources(),R.drawable.headbinke);
         this.x=x;
         this.y=y;
     }
-    public void setView(Context ccd,int x,int y,Bitmap head){
+    public void setView(int x,int y,Bitmap head){
         this.head=head;
         this.x=x;
         this.y=y;

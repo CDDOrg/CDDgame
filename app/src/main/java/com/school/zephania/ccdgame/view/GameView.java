@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Debug;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -15,6 +16,9 @@ import android.view.View;
 
 import com.school.zephania.ccdgame.model.God;
 import com.school.zephania.ccdgame.model.Player;
+
+import org.w3c.dom.Attr;
+import org.xml.sax.Attributes;
 
 /**
  * Created by zephania on 17-5-23.
@@ -49,8 +53,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
 
     };
 
-    public GameView(Context context){
-        super(context);
+    public GameView(Context context, AttributeSet attr){
+        super(context,attr);
         god = new God(context);
         this.setOnTouchListener(this);
         this.getHolder().addCallback(this);
