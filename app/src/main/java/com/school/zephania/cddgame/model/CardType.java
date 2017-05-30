@@ -1,4 +1,4 @@
-package com.example.cddgame.model;
+package com.school.zephania.cddgame.model;
 
 /**
  * Created by Yuan Qiang on 2017/5/30.

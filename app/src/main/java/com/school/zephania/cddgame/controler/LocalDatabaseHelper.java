@@ -1,4 +1,4 @@
-package com.example.cddgame.Controller;
+package com.school.zephania.cddgame.controler;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

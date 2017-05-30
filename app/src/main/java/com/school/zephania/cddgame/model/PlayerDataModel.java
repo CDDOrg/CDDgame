@@ -1,6 +1,8 @@
-package com.school.zephania.cddgame.model.localdatabase;
+package com.school.zephania.cddgame.model;
 
 import android.content.Context;
+
+import com.school.zephania.cddgame.controler.LocalDatabaseController;
 
 /**
  * Created by user0308 on 5/30/17.

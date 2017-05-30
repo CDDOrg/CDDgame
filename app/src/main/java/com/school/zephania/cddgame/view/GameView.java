@@ -1,24 +1,14 @@
 package com.school.zephania.cddgame.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.os.Debug;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
 import com.school.zephania.cddgame.model.God;
-import com.school.zephania.cddgame.model.Player;
-
-import org.w3c.dom.Attr;
-import org.xml.sax.Attributes;
 
 /**
  * Created by zephania on 17-5-23.
@@ -52,18 +42,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
 
     };
 
-    public GameView(Context context, AttributeSet attr){
+    public GameView(Context context, God god,AttributeSet attr){
         super(context,attr);
-        god = new God(context);
+        this.god = god;
         this.setOnTouchListener(this);
         this.getHolder().addCallback(this);
     }
 
     protected void  myDraw(Canvas canvas){
-            god.paint(canvas);
+        god.paint(canvas);
     }
-
-
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {

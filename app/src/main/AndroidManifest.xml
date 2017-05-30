@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.school.zephania.cddgame">
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
-    package="com.example.cddgame">
-
 
     <application
         android:allowBackup="true"
@@ -27,10 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
-
-</manifest>
-
     </application>
 
 </manifest>
