@@ -1,6 +1,5 @@
 package com.school.zephania.cddgame.model;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,7 +11,7 @@ import com.school.zephania.cddgame.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.school.zephania.cddgame.CDDgame.cdd;
+import static com.school.zephania.cddgame.controler.CDDgame.cdd;
 
 
 /**

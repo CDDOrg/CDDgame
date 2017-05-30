@@ -7,11 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.WindowManager;
+
 import com.school.zephania.cddgame.R;
 import java.util.ArrayList;
 
-import static com.school.zephania.cddgame.CDDgame.cdd;
+import static com.school.zephania.cddgame.controler.CDDgame.cdd;
 
 
 /**

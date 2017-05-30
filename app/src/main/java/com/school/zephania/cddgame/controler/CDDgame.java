@@ -1,4 +1,4 @@
-package com.school.zephania.cddgame;
+package com.school.zephania.cddgame.controler;
 
 
 import android.app.Activity;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.school.zephania.cddgame.R;
 import com.school.zephania.cddgame.view.GameView;
 
 /**
