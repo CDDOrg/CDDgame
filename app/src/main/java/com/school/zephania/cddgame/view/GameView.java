@@ -1,4 +1,4 @@
-package com.school.zephania.ccdgame.view;
+package com.school.zephania.cddgame.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,8 +14,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-import com.school.zephania.ccdgame.model.God;
-import com.school.zephania.ccdgame.model.Player;
+import com.school.zephania.cddgame.model.God;
+import com.school.zephania.cddgame.model.Player;
 
 import org.w3c.dom.Attr;
 import org.xml.sax.Attributes;
@@ -34,8 +34,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
         @Override
         public void run() {
             holder=getHolder();
-            while(threadFlag)
-            {
+            while(threadFlag){
                 god.gameLogic();
                 try {
                     canvas = holder.lockCanvas();

@@ -1,4 +1,4 @@
-package com.school.zephania.ccdgame;
+package com.school.zephania.cddgame;
 
 
 import android.app.Activity;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.school.zephania.ccdgame.view.GameView;
+import com.school.zephania.cddgame.view.GameView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -22,12 +22,13 @@ public class CDDgame extends Activity {
     public static Context cdd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        cdd=this;
         super.onCreate(savedInstanceState);
+        //full screen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        cdd=this;
         setContentView(R.layout.activity_cddgame);
     }
 }

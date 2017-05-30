@@ -1,4 +1,4 @@
-package com.school.zephania.ccdgame.model;
+package com.school.zephania.cddgame.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,11 +8,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.school.zephania.ccdgame.R;
+import com.school.zephania.cddgame.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.school.zephania.ccdgame.CDDgame.cdd;
+import static com.school.zephania.cddgame.CDDgame.cdd;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.school.zephania.ccdgame.model;
+package com.school.zephania.cddgame.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
