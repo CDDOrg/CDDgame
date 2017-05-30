@@ -42,12 +42,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
 
     };
 
-    public GameView(Context context, God god,AttributeSet attr){
-        super(context,attr);
-        this.god = god;
-        this.setOnTouchListener(this);
-        this.getHolder().addCallback(this);
-    }
+    //public GameView(Context context,AttributeSet attr){
+    //    super(context,attr);
+     //   god = new God();
+     //   this.setOnTouchListener(this);
+     //   this.getHolder().addCallback(this);
+   // }暂时解决gameview调用God的函数的问题。先不加载布局文件，用加载view的方式解决。
+    public GameView(Context context, God god){
+       super(context);
+        this.god=god;
+      this.setOnTouchListener(this);
+       this.getHolder().addCallback(this);
+     }
+
+
 
     protected void  myDraw(Canvas canvas){
         god.paint(canvas);

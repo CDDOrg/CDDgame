@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.school.zephania.cddgame.R;
+import com.school.zephania.cddgame.view.GameView;
 
 import java.util.Random;
 
@@ -27,35 +28,33 @@ public class God extends AppCompatActivity {
     private GameView gameView;
     public static Context sContext;
     private int state=-1;
-    private com.example.cddgame.model.Player[] players= new com.example.cddgame.model.Player[4];
+    private Player[] players= new Player[4];
     //绘图相关
     private Rect BackSrc,BackDst;
     private Bitmap gameBackGround;
     private int mWidth,mHeight;
     private int cardMargin=50;
-//   public God(Context cdd){
-//        Log.d("txt","God constuction function");
-//    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sContext=this;
         for (int i=0;i<players.length;i++){
-            players[i] = new com.example.cddgame.model.Player();
+            players[i] = new Player();
         }
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_cddgame);
+
+        //setContentView(R.layout.activity_cddgame);暂时解决gameview调用God的函数的问题。先不加载布局文件，用加载view的方式解决。
+
+        GameView gameView =new GameView(this,this);
+        setContentView(gameView);
     }
     private void init(){
         distributeCards();
         viewInit();
-
-        //为绘制图像使用的简陋发牌。
-        // player[2].setHandCards(cards.subList(0,12));
-
     }
     private void viewInit(){
         //获取屏幕宽高
@@ -74,9 +73,6 @@ public class God extends AppCompatActivity {
         players[1].setView(mWidth*5/20,10);
         players[2].setView(mWidth*18/20,mHeight/4);
         players[3].setView(mWidth*5/20,mHeight*3/4);
-//        //初始化卡牌图片
-//        for (int i=0;i<52;i++)
-//            cards.get(i).setImage(BitmapFactory.decodeResource(.getResources(),R.drawable.card1+i));
     }
 
     public void distributeCards(){//发牌
@@ -119,10 +115,7 @@ public class God extends AppCompatActivity {
         {
             players[i].paint(canvas);
         }
-        Log.d("txt","paint");
-        //画牌
-        // for (int i=0;i<player[2].getHandCard().size();i++)
-        // player[2].getHandCard().get(i).paint(canvas,mWidth/4+300+i*cardMargin,mHeight*3/4,false);
+
     }
 
     public void gameLogic() {

@@ -1,10 +1,16 @@
 package com.school.zephania.cddgame.model;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import com.school.zephania.cddgame.R;
+
 import java.util.ArrayList;
+
+import static com.school.zephania.cddgame.model.God.sContext;
+
 
 /**
  * Created by Zephania on 2017/5/27.
@@ -22,6 +28,8 @@ public class Card {
         this.NUM = NUM;
         number = NUM/4 + 3;
         suit = NUM % 4;
+
+        setImage(BitmapFactory.decodeResource(sContext.getResources(), R.drawable.card00+NUM));//设定牌的图片
     }
 
     public int getNUM() {
