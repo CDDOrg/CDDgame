@@ -4,7 +4,11 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
+<<<<<<< HEAD
+        applicationId "com.school.zephania.ccdgame"
+=======
         applicationId "com.example.cddgame"
+>>>>>>> 6ab3218a606bc9f95697417cdd333f041e04a9e2
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
@@ -25,7 +29,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
+<<<<<<< HEAD
     compile 'com.android.support:support-v4:25.3.1'
+=======
+>>>>>>> 6ab3218a606bc9f95697417cdd333f041e04a9e2
     testCompile 'junit:junit:4.12'
 }
-
