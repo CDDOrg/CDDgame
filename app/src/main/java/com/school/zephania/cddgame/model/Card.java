@@ -3,7 +3,10 @@ package com.school.zephania.cddgame.model;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 
 import com.school.zephania.cddgame.R;
 
@@ -48,9 +51,16 @@ public class Card {
         this.cardmap=cardmap;
     }
     void paint(Canvas canvas, int x, int y, boolean isAI){
-        Rect rsc = new Rect(x,y,cardmap.getWidth(),cardmap.getHeight());
+
+        Rect rsc = new Rect(0,0,cardmap.getWidth(),cardmap.getHeight());
         Rect dst = new Rect(x,y,cardmap.getWidth()*3/4+x,cardmap.getHeight()*3/4+y);
+        if (!isAI){
         canvas.drawBitmap(cardmap,rsc,dst,null);
+        }
+        else{
+            Bitmap cardback=BitmapFactory.decodeResource(sContext.getResources(),R.drawable.cardback);
+            canvas.drawBitmap(cardback,rsc,dst,null);
+        }
     }
 
 }

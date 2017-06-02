@@ -32,8 +32,8 @@ public class God extends AppCompatActivity {
     //绘图相关
     private Rect BackSrc,BackDst;
     private Bitmap gameBackGround;
-    private int mWidth,mHeight;
-    private int cardMargin=50;
+    public static int mWidth,mHeight;
+    public static int cardMargin=50;
 
 
     @Override
@@ -43,14 +43,15 @@ public class God extends AppCompatActivity {
         for (int i=0;i<players.length;i++){
             players[i] = new Player();
         }
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        GameView gameview =new GameView(this,this);
+        setContentView(gameview);
 
-        //setContentView(R.layout.activity_cddgame);暂时解决gameview调用God的函数的问题。先不加载布局文件，用加载view的方式解决。
+        //setContentView(R.layout.activity_cddgame);//暂时解决gameview调用God的函数的问题。先不加载布局文件，用加载view的方式解决。
 
-        GameView gameView =new GameView(this,this);
-        setContentView(gameView);
     }
     private void init(){
         distributeCards();
@@ -69,10 +70,10 @@ public class God extends AppCompatActivity {
         BackDst= new Rect(0,0,mWidth,mHeight);
 
         //设定头像区域
-        players[0].setView(10,mHeight/4);
-        players[1].setView(mWidth*5/20,10);
-        players[2].setView(mWidth*18/20,mHeight/4);
-        players[3].setView(mWidth*5/20,mHeight*3/4);
+        players[3].setView(10,mHeight/4);
+        players[2].setView(mWidth*5/20,10);
+        players[1].setView(mWidth*18/20,mHeight/4);
+        players[0].setView(mWidth*5/20,mHeight*3/4);
     }
 
     public void distributeCards(){//发牌
@@ -115,7 +116,11 @@ public class God extends AppCompatActivity {
         {
             players[i].paint(canvas);
         }
-
+        //画牌
+        players[0].paintCards(canvas, Player.Mode.DOWN);
+        players[1].paintCards(canvas, Player.Mode.RIGHT);
+        players[2].paintCards(canvas, Player.Mode.UP);
+        players[3].paintCards(canvas, Player.Mode.LEFT);
     }
 
     public void gameLogic() {

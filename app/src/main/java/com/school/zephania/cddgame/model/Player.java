@@ -10,6 +10,8 @@ import android.graphics.Rect;
 import com.school.zephania.cddgame.R;
 import java.util.ArrayList;
 
+import static com.school.zephania.cddgame.model.God.cardMargin;
+
 
 /**
  * Created by zephania on 17-5-23.
@@ -25,6 +27,8 @@ public class Player {
     private int maxCardNumber;       //相同牌型时，该值越大牌越大
     private CardType currentType = CardType.Null;      //当前选牌的牌型
     private ArrayList<Card> selectedCards;
+    @SuppressWarnings("unused")
+    public enum Mode{RIGHT,LEFT,UP,DOWN};//绘拍模式
 
     public Player(){
         handCards = new ArrayList<>();
@@ -175,5 +179,28 @@ public class Player {
         textpaint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(name,dst.centerX(),dst.bottom-15,textpaint);
     }
-
+    void paintCards(Canvas canvas,Mode mode){
+        switch (mode){
+            case DOWN:
+                for (int i=0;i<13;i++){
+                    handCards.get(i).paint(canvas,x+200+cardMargin*i,y,false);
+                }
+                break;
+            case UP:
+                for (int i=0;i<13;i++){
+                    handCards.get(i).paint(canvas,x+200+cardMargin/2*i,y,true);
+                }
+                break;
+            case RIGHT:
+                for (int i=0;i<13;i++){
+                    handCards.get(i).paint(canvas,x-200,y+cardMargin/2*i,true);
+                }
+                break;
+            case LEFT:
+                for (int i=0;i<13;i++){
+                    handCards.get(i).paint(canvas,x+200,y+cardMargin/2*i,true);
+                }
+                break;
+        }
+    }
 }
