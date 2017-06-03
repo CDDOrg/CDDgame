@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.school.zephania.cddgame.R;
 import java.util.ArrayList;
@@ -201,6 +203,17 @@ public class Player {
                     handCards.get(i).paint(canvas,x+200,y+cardMargin/2*i,true);
                 }
                 break;
+        }
+    }
+    void onTouch(View v, MotionEvent event){
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+
+        for (int i = 0; i <=13; i++) {
+            if (God.inRect(x,y,this.x+200+cardMargin*i,this.y,cardMargin,handCards.get(i).cardHeight)) {
+                handCards.get(i).changeSelected();
+                break;
+            }
         }
     }
 }

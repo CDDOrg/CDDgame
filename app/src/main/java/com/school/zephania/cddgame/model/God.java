@@ -1,5 +1,6 @@
 package com.school.zephania.cddgame.model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -23,15 +26,21 @@ import java.util.Random;
  * Created by zephania on 17-5-23.
  */
 
-public class God extends AppCompatActivity {
+public class God extends Activity {
     //游戏逻辑相关
     private GameView gameView;
     public static Context sContext;
     private int state=-1;
+    private int currentPlayer;
     private Player[] players= new Player[4];
+
     //绘图相关
     private Rect BackSrc,BackDst;
     private Bitmap gameBackGround;
+    private Rect chupaiSrc,chupaiDst;
+    private Bitmap chupai;
+    private Rect passSrc,passDst;
+    private Bitmap pass;
     public static int mWidth,mHeight;
     public static int cardMargin=50;
 
@@ -55,6 +64,7 @@ public class God extends AppCompatActivity {
     }
     private void init(){
         distributeCards();
+        currentPlayer=0;
         viewInit();
     }
     private void viewInit(){
@@ -63,12 +73,18 @@ public class God extends AppCompatActivity {
         dm = sContext.getResources().getDisplayMetrics();
         mWidth = dm.widthPixels;// 宽度
         mHeight = dm.heightPixels;// 高度
-
+        //背景相关
         gameBackGround=BitmapFactory.decodeResource(sContext.getResources(), R.drawable.backgroundgaming);
         //设定背景区域
         BackSrc= new Rect(0,0,gameBackGround.getWidth(),gameBackGround.getHeight());
         BackDst= new Rect(0,0,mWidth,mHeight);
-
+        //按钮相关
+        chupai=BitmapFactory.decodeResource(sContext.getResources(),R.drawable.chupai);
+        chupaiSrc= new Rect(0,0,chupai.getWidth(),chupai.getHeight());
+        chupaiDst= new Rect(mWidth*8/20,mHeight*4/6-30,mWidth*8/20+chupai.getWidth()/2,chupai.getHeight()/2+mHeight*4/6-30);
+        pass=BitmapFactory.decodeResource(sContext.getResources(),R.drawable.pass);
+        passSrc= new Rect(0,0,pass.getWidth(),pass.getHeight());
+        passDst= new Rect(mWidth*10/20,mHeight*4/6-30,mWidth*10/20+chupai.getWidth()/2,chupai.getHeight()/2+mHeight*4/6-30);
         //设定头像区域
         players[3].setView(10,mHeight/4);
         players[2].setView(mWidth*5/20,10);
@@ -121,6 +137,11 @@ public class God extends AppCompatActivity {
         players[1].paintCards(canvas, Player.Mode.RIGHT);
         players[2].paintCards(canvas, Player.Mode.UP);
         players[3].paintCards(canvas, Player.Mode.LEFT);
+        //画按钮
+        if (currentPlayer == 0) {
+            canvas.drawBitmap(chupai, chupaiSrc, chupaiDst, null);
+            canvas.drawBitmap(pass, passSrc, passDst, null);
+        }
     }
 
     public void gameLogic() {
@@ -135,6 +156,35 @@ public class God extends AppCompatActivity {
         }
     }
 
-    private void gaming(){}
+    private void gaming(){}//游戏运行时逻辑
+
+    private void dealWithChupai(){
+
+    }//出牌的响应函数
+    private void dealWithPass(){
+
+    }//pass的响应函数
+
+    public static boolean inRect(int x, int y, int rectX, int rectY, int rectW,
+                                 int rectH) {
+        if (x < rectX || x > rectX + rectW || y < rectY || y > rectY + rectH) {
+            return false;
+        }
+        return true;
+    }
+
+    public void onTouch(View v, MotionEvent event){
+        if(currentPlayer!=0)
+            return;
+        int x=(int)event.getX();
+        int y=(int)event.getY();
+        if (chupaiSrc.contains(x,y)) {
+            dealWithChupai();
+        }
+        if (passSrc.contains(x,y)) {
+            dealWithPass();
+        }
+        players[0].onTouch(v,event);
+    }
 }
 

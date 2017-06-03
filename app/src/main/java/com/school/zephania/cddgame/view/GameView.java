@@ -64,7 +64,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        return false;
+
+        if(event.getAction()!=MotionEvent.ACTION_UP)
+        {
+            return true;
+        }
+        System.out.println(event.getX() + "  " + event.getY()+"-"+(event.getAction()==MotionEvent.ACTION_UP));//测设用
+        god.onTouch(v, event);
+//		threadFlag=!threadFlag;
+        return true;
     }
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
