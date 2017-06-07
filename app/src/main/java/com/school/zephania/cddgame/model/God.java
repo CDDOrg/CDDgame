@@ -31,8 +31,10 @@ public class God extends Activity {
     private GameView gameView;
     public static Context sContext;
     private int state=-1;
-    private int currentPlayer;
+    private int currentPlayer;//当前出牌的玩家
+    private int maxSendCardPlayer = -1;//出了场上最大的牌的玩家
     private Player[] players= new Player[4];
+    private TypeNumCouple maxTypeNumCouple;//当前场上最大的牌组
 
     //绘图相关
     private Rect BackSrc,BackDst;
@@ -57,6 +59,7 @@ public class God extends Activity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         GameView gameview =new GameView(this,this);
+        maxTypeNumCouple = new TypeNumCouple();
         setContentView(gameview);
 
         //setContentView(R.layout.activity_cddgame);//暂时解决gameview调用God的函数的问题。先不加载布局文件，用加载view的方式解决。
@@ -99,7 +102,7 @@ public class God extends Activity {
         }
         shuffle(cards);
 
-        for (int i=0;i<cards.length;i++){
+        for (int i=0;i<cards.length;i+=4){
             for (int j=0;j<players.length;j++){
                 players[j].addCard(new Card(cards[i]));
             }
@@ -159,11 +162,21 @@ public class God extends Activity {
     private void gaming(){}//游戏运行时逻辑
 
     private void dealWithChupai(){
+        maxTypeNumCouple = players[0].sendCard();
+        players[0].setSendCardTag(false);
+        turn();
 
     }//出牌的响应函数
     private void dealWithPass(){
-
+        turn();
     }//pass的响应函数
+    private void turn(){//下一位玩家出牌
+        currentPlayer = (currentPlayer+1)%4;
+        if (currentPlayer == maxSendCardPlayer){
+            //如果当前出牌的玩家正是出最大牌的玩家，那么开启新的一轮
+            maxTypeNumCouple.reset();
+        }
+    }
 
     public static boolean inRect(int x, int y, int rectX, int rectY, int rectW,
                                  int rectH) {
@@ -184,7 +197,7 @@ public class God extends Activity {
         if (passSrc.contains(x,y)) {
             dealWithPass();
         }
-        players[0].onTouch(v,event);
+        players[0].onTouch(v,event, maxTypeNumCouple);
     }
 }
 

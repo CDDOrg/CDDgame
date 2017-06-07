@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.school.zephania.cddgame.R;
+import com.school.zephania.cddgame.view.CardResource;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class Card {
     private int NUM;   //牌的编号，【0，51】，用于设置图片资源和比较大小，编号越大牌越大
     private int number; //牌实际大小【3，15】，用于检测顺子
     private int suit;  //牌的花色，【0，3 】，用于检测同花，按照方块、梅花、红桃、黑桃顺序
+
     private boolean isSelected=false;
     private Bitmap cardmap;
     private ArrayList<Card> handcards=new ArrayList<>();
@@ -37,7 +39,7 @@ public class Card {
         number = NUM/4 + 3;
         suit = NUM % 4;
 
-        setImage(BitmapFactory.decodeResource(sContext.getResources(), R.drawable.card00+NUM));//设定牌的图片
+        setImage(BitmapFactory.decodeResource(sContext.getResources(), CardResource.res[NUM]));//设定牌的图片
         cardWidth=cardmap.getWidth()*3/4;
         cardHeight=cardmap.getHeight()*3/4;
     }
@@ -55,6 +57,9 @@ public class Card {
     }
     public void changeSelected(){
         isSelected=!isSelected;
+    }
+    public boolean isSelected() {
+        return isSelected;
     }
 
     void setImage(Bitmap cardmap){

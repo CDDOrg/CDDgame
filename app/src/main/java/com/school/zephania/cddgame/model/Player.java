@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -25,9 +26,10 @@ public class Player {
     private int y;
     private String name= "binke";
     private ArrayList<Card> handCards;
+    private boolean sendCardTag = false; //能否出牌的标志，true为能出牌
 
-    private int maxCardNumber;       //相同牌型时，该值越大牌越大
-    private CardType currentType = CardType.Null;      //当前选牌的牌型
+    private TypeNumCouple couple;
+
     private ArrayList<Card> selectedCards;
     @SuppressWarnings("unused")
     public enum Mode{RIGHT,LEFT,UP,DOWN};//绘拍模式
@@ -35,27 +37,48 @@ public class Player {
     public Player(){
         handCards = new ArrayList<>();
         selectedCards = new ArrayList<>();
+        couple = new TypeNumCouple();
     }
     public void addCard(Card card){//往手牌中添牌
         handCards.add(card);
-        sort(handCards);
+        sortHandCards(handCards);
+    }
+
+    public TypeNumCouple sendCard(){//出牌
+        handCards.removeAll(selectedCards);
+        selectedCards.removeAll(selectedCards);
+        sortHandCards(handCards);
+        TypeNumCouple temp = couple;
+        couple.reset();
+        return temp;
     }
 
     public void selectCard(Card card){//点击一张牌即选牌
         selectedCards.add(card);
-        handCards.remove(card);
-        sort(selectedCards);
+       // handCards.remove(card);
+        sortSelectesCards(selectedCards);
         calCardType();
+        Log.d("Player", "CardType = " + couple.getCardType());
     }
     public void cancleCard(Card card){
         selectedCards.remove(card);
-        handCards.add(card);
-        sort(handCards);
+        //handCards.add(card);
+        sortSelectesCards(selectedCards);
         calCardType();
+        Log.d("Player", "CardType = " + couple.getCardType());
     }
-    private void sort(ArrayList<Card> cards){
+    private void sortSelectesCards(ArrayList<Card> cards){
         for (int i=1;i<cards.size();i++){
-            for (int j=i;j>0&&cards.get(j-1).getNumber()<cards.get(j).getNumber();j--){
+            for (int j=i;j>0&&cards.get(j-1).getNUM()>cards.get(j).getNUM();j--){
+                Card temp = cards.get(j-1);
+                cards.set(j-1, cards.get(j));
+                cards.set(j, temp);
+            }
+        }
+    }
+    private void sortHandCards(ArrayList<Card> cards){
+        for (int i=1;i<cards.size();i++){
+            for (int j=i;j>0&&cards.get(j-1).getNUM()<cards.get(j).getNUM();j--){
                 Card temp = cards.get(j-1);
                 cards.set(j-1, cards.get(j));
                 cards.set(j, temp);
@@ -64,26 +87,32 @@ public class Player {
     }
     private void calCardType() {//计算牌型
         if (selectedCards.size() == 1){
-            currentType = CardType.Signal;
-            maxCardNumber = selectedCards.get(0).getNUM();
+            couple.setCardType( CardType.Signal);
+            couple.setNUM(selectedCards.get(0).getNUM()) ;
+            return;
         }else if (selectedCards.size() == 2){
             if (isEqual(0,1)){
-                currentType = CardType.Pair;
-                maxCardNumber = selectedCards.get(0).getNUM();
+                couple.setCardType(CardType.Pair);
+                couple.setNUM( selectedCards.get(0).getNUM());
+                return;
             }
         }else if (selectedCards.size() == 3){
             if (isEqual(0,1) && isEqual(1,2)){
-                currentType = CardType.Set;
-                maxCardNumber = selectedCards.get(0).getNUM();
+                couple.setCardType( CardType.Set);
+                couple.setNUM(selectedCards.get(0).getNUM());
+                return;
             }
         }else if (selectedCards.size() == 5){
             if (checkFlush()){
                 checkStraughtFlush();
-                currentType = CardType.FIve;
+                couple.setCardType(CardType.FIve);
+                return;
             }else if (checkStraight() || checkFullHouse() || checkFourKind()){
-                currentType = CardType.FIve;
+                couple.setCardType(CardType.FIve);
+                return;
             }
         }
+        couple.setCardType(CardType.Null);
     }
     private boolean isEqual(int i, int j){//检测两牌牌面大小是否相等
         return selectedCards.get(i).getNumber() == selectedCards.get(j).getNumber();
@@ -96,7 +125,7 @@ public class Player {
                     selectedCards.get(2).getNumber() == 5 &&
                     (selectedCards.get(3).getNumber() == 6||
                             selectedCards.get(3).getNumber() == 14)){
-                maxCardNumber = selectedCards.get(4).getNUM() + 52 * 0;
+                couple.setNUM(selectedCards.get(4).getNUM() + 52 * 0);
                 return true;
             }
             return false;
@@ -106,7 +135,7 @@ public class Player {
                     return false;
                 }
             }
-            maxCardNumber = selectedCards.get(4).getNUM() + 52 * 0;
+            couple.setNUM(selectedCards.get(4).getNUM() + 52 * 0);
             return true;
         }
     }
@@ -116,16 +145,16 @@ public class Player {
                 return false;
             }
         }
-        maxCardNumber = selectedCards.get(4).getNUM() + 52 * 1;
+        couple.setNUM(selectedCards.get(4).getNUM() + 52 * 1);
         return true;
     }
     private boolean checkFullHouse(){//检测三带二
         if (isEqual(0,1)){//如果前两张牌相等，那么检测第三张，有两种情况，前三后二，前二后三
             if (isEqual(0,2) && isEqual(3,4)){
-                maxCardNumber = selectedCards.get(0).getNUM() + 52 * 2;
+                couple.setNUM(selectedCards.get(0).getNUM() + 52 * 2);
                 return true;
             }else if (isEqual(2,3) && isEqual(3,4)){
-                maxCardNumber = selectedCards.get(5).getNUM() + 52 * 2;
+                couple.setNUM(selectedCards.get(5).getNUM() + 52 * 2);
                 return true;
             }else {
                 return false;
@@ -137,7 +166,7 @@ public class Player {
     private boolean checkFourKind(){
         if (isEqual(1,2) && isEqual(2,3)){
             if (isEqual(0,1) || isEqual(3,4)){
-                maxCardNumber = selectedCards.get(1).getNUM() + 52 * 3;
+                couple.setNUM(selectedCards.get(1).getNUM() + 52 * 3);
                 return true;
             }else {
                 return false;
@@ -148,7 +177,7 @@ public class Player {
     }
     private boolean checkStraughtFlush(){
         if (checkStraight() && checkFlush()){
-            maxCardNumber = selectedCards.get(4).getNUM() + 52 * 4;
+            couple.setNUM(selectedCards.get(4).getNUM() + 52 * 4);
             return true;
         }
         return false;
@@ -184,36 +213,55 @@ public class Player {
     void paintCards(Canvas canvas,Mode mode){
         switch (mode){
             case DOWN:
-                for (int i=0;i<13;i++){
+                for (int i=0;i<handCards.size();i++){
                     handCards.get(i).paint(canvas,x+200+cardMargin*i,y,false);
                 }
                 break;
             case UP:
-                for (int i=0;i<13;i++){
+                for (int i=0;i<handCards.size();i++){
                     handCards.get(i).paint(canvas,x+200+cardMargin/2*i,y,true);
                 }
                 break;
             case RIGHT:
-                for (int i=0;i<13;i++){
+                for (int i=0;i<handCards.size();i++){
                     handCards.get(i).paint(canvas,x-200,y+cardMargin/2*i,true);
                 }
                 break;
             case LEFT:
-                for (int i=0;i<13;i++){
+                for (int i=0;i<handCards.size();i++){
                     handCards.get(i).paint(canvas,x+200,y+cardMargin/2*i,true);
                 }
                 break;
         }
     }
-    void onTouch(View v, MotionEvent event){
+    void onTouch(View v, MotionEvent event, TypeNumCouple couple){
         int x = (int) event.getX();
         int y = (int) event.getY();
 
-        for (int i = 0; i <=13; i++) {
+        for (int i = 0; i <handCards.size(); i++) {
             if (God.inRect(x,y,this.x+200+cardMargin*i,this.y,cardMargin,handCards.get(i).cardHeight)) {
+                if (handCards.get(i).isSelected()){
+                    cancleCard(handCards.get(i));
+                }else {
+                    selectCard(handCards.get(i));
+                }
+
+                if (this.couple.isBigger(couple)){//如果选择的牌更小则不能出
+                    sendCardTag = true;
+                }else {
+                    sendCardTag = false;
+                }
                 handCards.get(i).changeSelected();
                 break;
             }
         }
+    }
+
+    public boolean isSendCardTag() {
+        return sendCardTag;
+    }
+
+    public void setSendCardTag(boolean sendCardTag) {
+        this.sendCardTag = sendCardTag;
     }
 }

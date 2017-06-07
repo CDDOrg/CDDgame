@@ -20,4 +20,20 @@ public class ModefiedLog {
      *  5、由于各自代码差异过大，因此重建项目
      *  6、基本整合三人代码
      */
+    
+    /**
+     *
+     *@author Yuan Qiang
+     *created at 2017/6/7 20:49
+     *更改排序函数，将getNumber()改为getNum()，修正排序花色顺序不对的bug
+     * 增加一个类TypeNumCouple
+     * 在Player中增加私有变量sendCardTag,以及相应的getter和setter
+     * 在Player中增加西游变量couple
+     * 修改并完善Player中的出牌函数sendCard()
+     * 在Player中的onTouch()方法中增加了修改能否出牌的逻辑，并且多增加一个TypeNumCopuple的参数
+     * 在God中部分实现dealWithChupai()和dealWithPass()函数
+     * 在God中增加turn()函数
+     * 未测试
+     */
+
 }
