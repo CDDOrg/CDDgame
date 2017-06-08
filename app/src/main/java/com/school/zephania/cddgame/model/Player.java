@@ -13,7 +13,12 @@ import android.view.View;
 import com.school.zephania.cddgame.R;
 import java.util.ArrayList;
 
+import static com.school.zephania.cddgame.model.Card.cardHeight;
+import static com.school.zephania.cddgame.model.Card.cardWidth;
 import static com.school.zephania.cddgame.model.God.cardMargin;
+import static com.school.zephania.cddgame.model.God.mHeight;
+import static com.school.zephania.cddgame.model.God.mWidth;
+import static java.lang.Thread.sleep;
 
 
 /**
@@ -26,17 +31,20 @@ public class Player {
     private int y;
     private String name= "binke";
     private ArrayList<Card> handCards;
+
     private boolean sendCardTag = false; //能否出牌的标志，true为能出牌
 
     private TypeNumCouple couple;
-
     private ArrayList<Card> selectedCards;
+    private ArrayList<Card> sendCards;//出的牌
+    private boolean sendState=false;//出牌状态
     @SuppressWarnings("unused")
     public enum Mode{RIGHT,LEFT,UP,DOWN};//绘拍模式
 
     public Player(){
         handCards = new ArrayList<>();
         selectedCards = new ArrayList<>();
+        sendCards=new ArrayList<>();
         couple = new TypeNumCouple();
     }
     public void addCard(Card card){//往手牌中添牌
@@ -46,6 +54,8 @@ public class Player {
 
     public TypeNumCouple sendCard(){//出牌
         handCards.removeAll(selectedCards);
+        getsendCard();//获取出牌-绘图用
+        sendState=true;
         selectedCards.removeAll(selectedCards);
         sortHandCards(handCards);
         TypeNumCouple temp = couple;
@@ -210,6 +220,7 @@ public class Player {
         textpaint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(name,dst.centerX(),dst.bottom-15,textpaint);
     }
+    boolean threadcontrol=false;//控制绘屏进程用
     void paintCards(Canvas canvas,Mode mode){
         switch (mode){
             case DOWN:
@@ -233,13 +244,38 @@ public class Player {
                 }
                 break;
         }
+        if(threadcontrol){
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            threadcontrol=false;
+        }
+        if(sendState){
+            paintChupai(canvas);
+            sendState=false;
+            threadcontrol=true;
+            sendCards.removeAll(sendCards);
+        }
+
+    }
+    public void getsendCard(){
+        sendCards=(ArrayList<Card>)selectedCards.clone();
+    }
+    public void paintChupai(Canvas canvas){
+        int length=(sendCards.size()-1)*cardMargin+cardWidth;
+        for (int i=0;i<sendCards.size();i++){
+            sendCards.get(i).paint(canvas,(mWidth-length)/2+i*cardMargin,(mHeight-cardHeight)/2,false);
+        }
     }
     void onTouch(View v, MotionEvent event, TypeNumCouple couple){
         int x = (int) event.getX();
         int y = (int) event.getY();
-
-        for (int i = 0; i <handCards.size(); i++) {
-            if (God.inRect(x,y,this.x+200+cardMargin*i,this.y,cardMargin,handCards.get(i).cardHeight)) {
+        int cardnum=handCards.size();
+        int width=cardMargin;
+        for (int i = 0; i <cardnum; i++) {
+            if (God.inRect(x,y,this.x+200+cardMargin*i,this.y,width,handCards.get(i).cardHeight)||(i==cardnum-1&&God.inRect(x,y,this.x+200+cardMargin*i,this.y,cardWidth,handCards.get(i).cardHeight))) {
                 if (handCards.get(i).isSelected()){
                     cancleCard(handCards.get(i));
                 }else {
@@ -263,5 +299,8 @@ public class Player {
 
     public void setSendCardTag(boolean sendCardTag) {
         this.sendCardTag = sendCardTag;
+    }
+    public boolean getSendCardTag(){
+        return sendCardTag;
     }
 }

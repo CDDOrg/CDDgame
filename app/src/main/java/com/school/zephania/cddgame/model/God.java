@@ -37,10 +37,11 @@ public class God extends Activity {
     private TypeNumCouple maxTypeNumCouple;//当前场上最大的牌组
 
     //绘图相关
+
     private Rect BackSrc,BackDst;
     private Bitmap gameBackGround;
     private Rect chupaiSrc,chupaiDst;
-    private Bitmap chupai;
+    private Bitmap chupai,chupai2;
     private Rect passSrc,passDst;
     private Bitmap pass;
     public static int mWidth,mHeight;
@@ -83,6 +84,7 @@ public class God extends Activity {
         BackDst= new Rect(0,0,mWidth,mHeight);
         //按钮相关
         chupai=BitmapFactory.decodeResource(sContext.getResources(),R.drawable.chupai);
+        chupai2=BitmapFactory.decodeResource(sContext.getResources(),R.drawable.chupai2);
         chupaiSrc= new Rect(0,0,chupai.getWidth(),chupai.getHeight());
         chupaiDst= new Rect(mWidth*8/20,mHeight*4/6-30,mWidth*8/20+chupai.getWidth()/2,chupai.getHeight()/2+mHeight*4/6-30);
         pass=BitmapFactory.decodeResource(sContext.getResources(),R.drawable.pass);
@@ -142,7 +144,10 @@ public class God extends Activity {
         players[3].paintCards(canvas, Player.Mode.LEFT);
         //画按钮
         if (currentPlayer == 0) {
-            canvas.drawBitmap(chupai, chupaiSrc, chupaiDst, null);
+            if(players[0].getSendCardTag())
+                canvas.drawBitmap(chupai, chupaiSrc, chupaiDst, null);
+            else
+                canvas.drawBitmap(chupai2, chupaiSrc, chupaiDst, null);
             canvas.drawBitmap(pass, passSrc, passDst, null);
         }
     }
@@ -162,6 +167,7 @@ public class God extends Activity {
     private void gaming(){}//游戏运行时逻辑
 
     private void dealWithChupai(){
+
         maxTypeNumCouple = players[0].sendCard();
         players[0].setSendCardTag(false);
         turn();
@@ -191,10 +197,11 @@ public class God extends Activity {
             return;
         int x=(int)event.getX();
         int y=(int)event.getY();
-        if (chupaiSrc.contains(x,y)) {
+
+        if (chupaiDst.contains(x,y)&&players[0].getSendCardTag()) {
             dealWithChupai();
         }
-        if (passSrc.contains(x,y)) {
+        if (passDst.contains(x,y)) {
             dealWithPass();
         }
         players[0].onTouch(v,event, maxTypeNumCouple);

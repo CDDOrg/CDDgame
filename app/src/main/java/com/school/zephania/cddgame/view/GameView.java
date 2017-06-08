@@ -20,7 +20,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Vie
     private boolean threadFlag=true;
     private Canvas canvas;
 
-    Thread gameThread = new Thread() {
+     Thread gameThread = new Thread() {
         @Override
         public void run() {
             holder=getHolder();

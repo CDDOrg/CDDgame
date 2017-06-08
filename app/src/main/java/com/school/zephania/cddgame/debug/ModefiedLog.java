@@ -35,5 +35,13 @@ public class ModefiedLog {
      * 在God中增加turn()函数
      * 未测试
      */
-
+    /** @author Zephania
+     * created at 2017/6/8 23.33
+     * 修复无法按键的bug
+     * 修复最后一张牌按键区域的bug
+     * 增加一种出牌按钮的状态，即不出牌为灰色。
+     * Player增加一个数组sendcard记录出牌的牌，增加一个sendstate记录出牌状态，调整了出牌函数，增加了threadcontrol，以实现停顿效果，
+     * Player增加一个函数paintchupai，调整paint函数，增加出牌动画
+     *
+     */
 }
