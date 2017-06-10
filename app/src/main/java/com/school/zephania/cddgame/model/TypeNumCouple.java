@@ -36,11 +36,11 @@ public class TypeNumCouple {
     }
 
     public boolean isBigger(TypeNumCouple couple){//比较两组牌的大小
-        if (couple.getCardType() == CardType.Null){
-            return true;  //任何牌组都大于无牌型的牌组
-        }
         if (cardType == CardType.Null){
             return false;
+        }
+        if (couple.getCardType() == CardType.Null){
+            return true;  //任何牌组都大于无牌型的牌组
         }
         if (cardType == couple.cardType && NUM > couple.getNUM()){
             return true;

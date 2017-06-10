@@ -44,4 +44,12 @@ public class ModefiedLog {
      * Player增加一个函数paintchupai，调整paint函数，增加出牌动画
      *
      */
+
+    /**
+     *
+     *@author Yuan Qiang
+     *created at 2017/6/10 21:21
+     * 修复选三带二程序崩溃的bug
+     * 修复出牌按钮一旦变亮再不变暗的bug
+     */
 }

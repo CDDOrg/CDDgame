@@ -56,6 +56,7 @@ public class Player {
         handCards.removeAll(selectedCards);
         getsendCard();//获取出牌-绘图用
         sendState=true;
+        sendCardTag = false;
         selectedCards.removeAll(selectedCards);
         sortHandCards(handCards);
         TypeNumCouple temp = couple;
@@ -164,7 +165,7 @@ public class Player {
                 couple.setNUM(selectedCards.get(0).getNUM() + 52 * 2);
                 return true;
             }else if (isEqual(2,3) && isEqual(3,4)){
-                couple.setNUM(selectedCards.get(5).getNUM() + 52 * 2);
+                couple.setNUM(selectedCards.get(4).getNUM() + 52 * 2);
                 return true;
             }else {
                 return false;
