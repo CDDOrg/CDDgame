@@ -82,5 +82,29 @@ public class Card {
 
     }
 
+    public boolean compeareTo(Card card){//大于return true,小于return false
+        if(this.number>card.getNumber()){//如果本牌牌面大于card
+            return true;
+        }else if(this.number<card.getNumber()){//如果本牌牌面小于card
+            return false;
+        }else {//牌面一样大
+            return suit>card.getSuit();
+        }
+    }
+
+    public void printInfo(){
+        System.out.println("this card's NUM is " + NUM + " face is " + number + " suit is "+ suit);
+        switch (suit){
+            case 0:
+                System.out.println(" it is 方块" + number);break;
+            case 1:
+                System.out.println(" it is 梅花" + number);break;
+            case 2:
+                System.out.println(" it is 红桃" + number);break;
+            case 3:
+                System.out.println(" it is 黑桃" + number);break;
+        }
+    }
+
 }
 
