@@ -3,17 +3,23 @@ package com.school.zephania.cddgame.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static com.school.zephania.cddgame.model.CardType.FIve;
+import static com.school.zephania.cddgame.model.CardType.Null;
+import static com.school.zephania.cddgame.model.CardType.Pair;
+import static com.school.zephania.cddgame.model.CardType.Set;
+import static com.school.zephania.cddgame.model.CardType.Signal;
+
 /**
  * Created by user0308 on 6/5/17.
  */
 
-public class AIDataModel {
+public class AIDataModel{
     private ArrayList<Card> handCards;//手牌
     //private HandCards handcards;
 
     private int maxCardNumber;       //相同牌型时，该值越大牌越大
     private CardType currentType = CardType.Null;      //当前选牌的牌型
-
+    private TypeNumCouple last = new TypeNumCouple();  //上轮出的牌
 
     ArrayList<Card> single = new ArrayList<>();//单张
     ArrayList<Card> pair = new ArrayList<>();//一对
@@ -26,6 +32,7 @@ public class AIDataModel {
 
     ArrayList<Card> flush = new ArrayList<>();
     Couple[] counts = new Couple[13];
+
 
     public AIDataModel(){
         handCards = new ArrayList<>();
@@ -157,7 +164,6 @@ public class AIDataModel {
 //        return false;
 //    }
 
-
     public void deal(){
         //sortByNumber(handCards);//2,1,K,J,...4,3
         divided();//分成13堆,下标从0到12
@@ -201,62 +207,97 @@ public class AIDataModel {
         }
     }
 
-    public void sendCards(TypeNumCouple typeNumCouple){
+    public TypeNumCouple sendCards(TypeNumCouple typeNumCouple){
+        if(typeNumCouple.isEqual(last)){  //如果检测到上一轮没有出的比自己上一轮大，说明是自己的回合
+            last = sendCardsFirst();
+            return last;
+        }else{
+            TypeNumCouple couple = sendCardsHelp(typeNumCouple);
+            if(! couple.isEqual(typeNumCouple)){  //这是说明要的起上一家的牌
+                last = couple;
+            }
+            return couple;
+        }
+    }
+    //首轮出牌
+    public TypeNumCouple sendCardsFirst(){
+        TypeNumCouple couple;
+        if( (couple = sendCardsHelp(new TypeNumCouple(FIve,-1)) ).getNUM() == -1){
+            return couple;
+        }
+        if( (couple = sendCardsHelp(new TypeNumCouple(Set,-1)) ).getNUM() == -1){
+            return couple;
+        }
+        if( (couple = sendCardsHelp(new TypeNumCouple(Pair,-1)) ).getNUM() == -1){
+            return couple;
+        }
+        return sendCardsHelp(new TypeNumCouple(Signal,-1));
+    }
+
+
+    public TypeNumCouple sendCardsHelp(TypeNumCouple typeNumCouple){
         int tmp = -1;
         int index = -1;
         switch (typeNumCouple.getCardType()){
-            case Null:
             case Signal://单张
                 for(int i=0;i<counts.length;i++){
                     if(counts[i].counts==1){
                         //System.out.print(" "+ i);
                         tmp = counts[i].getBigger(typeNumCouple.getNUM());
-                        if(tmp!=-1)
+                        if(tmp!=-1) {
                             index = i;
-                        break;
+                            break;
+                        }
                     }
                 }
                 if(tmp==-1){
-                    System.out.println("Pass");
+                    //System.out.println("Pass");
+                    return typeNumCouple;
                 }
                 else{
                     System.out.println("Single "+ tmp);//出了这张牌,还要将它从手牌中remove
                     handCards.remove(counts[index].number.get(0));
                     counts[index].counts-=1;
+                    return new TypeNumCouple(Signal,tmp);
                 }
-                break;
+
             case Pair://对
                 for(int i=0;i<counts.length;i++){
                     if(counts[i].counts==2){
                         //System.out.print(" "+ i);
                         tmp = counts[i].getBigger(typeNumCouple.getNUM());
-                        if(tmp!=-1)
+                        if(tmp!=-1) {
                             index = i;
-                        break;
+                            break;
+                        }
                     }
                 }
                 if(tmp==-1){
-                    System.out.println("Pass");
+                    //System.out.println("Pass");
+                    return typeNumCouple;
                 }
                 else{
                     System.out.println("Pair "+ tmp);
                     handCards.remove(counts[index].number.get(0));
                     handCards.remove(counts[index].number.get(1));
                     counts[index].counts-=2;
+                    return new TypeNumCouple(Pair,tmp);
                 }
-                break;
+
             case Set://单三张
                 for(int i=0;i<counts.length;i++){
                     if(counts[i].counts==3){
                         //System.out.print(" "+ i);
                         tmp = counts[i].getBigger(typeNumCouple.getNUM());
-                        if(tmp!=-1)
+                        if(tmp!=-1) {
                             index = i;
-                        break;
+                            break;
+                        }
                     }
                 }
                 if(tmp==-1){
-                    System.out.println("Pass");
+                    //System.out.println("Pass");
+                    return typeNumCouple;
                 }
                 else{
                     System.out.println("Three "+ tmp);
@@ -264,8 +305,9 @@ public class AIDataModel {
                     handCards.remove(counts[index].number.get(1));
                     handCards.remove(counts[index].number.get(2));
                     counts[index].counts-=3;
+                    return new TypeNumCouple(Set,tmp);
                 }
-                break;
+
             case FIve:
                 //将typeNumCouple.getNUM()拆解,得出牌的类型,最大值
                 switch (typeNumCouple.getNUM()/52){
@@ -289,7 +331,7 @@ public class AIDataModel {
                                     handCards.remove(flush.get(j+2));
                                     handCards.remove(flush.get(j+3));
                                     handCards.remove(flush.get(j+4));*/
-                                    return;//出完牌就结束这个函数
+                                    return new TypeNumCouple(FIve,flush.get(i+4).getNUM());//出完牌就结束这个函数
                                 }
                             }
                         }
@@ -305,14 +347,14 @@ public class AIDataModel {
                                                 for(int j=0;j<5;j++){
                                                     DiamondList.get(j).printInfo();
                                                 }
-                                                return;//结束,不再继续找下去
+                                                return new TypeNumCouple(FIve,DiamondList.get(4).getNUM());//结束,不再继续找下去
                                             }else {
                                                 //出牌,前四张加上i这张
                                                 for (int j=0;j<4;j++){
                                                     DiamondList.get(j).printInfo();
                                                 }
                                                 DiamondList.get(i).printInfo();
-                                                return;//结束,不再继续
+                                                return new TypeNumCouple(FIve,DiamondList.get(i).getNUM());//结束,不再继续
                                             }
                                         }
                                     }
@@ -326,14 +368,14 @@ public class AIDataModel {
                                                 for(int j=0;j<5;j++){
                                                     ClubList.get(j).printInfo();
                                                 }
-                                                return;
+                                                return new TypeNumCouple(FIve,ClubList.get(4).getNUM());
                                             }else {
                                                 //出牌,前四张加上i这张
                                                 for (int j=0;j<4;j++){
                                                     ClubList.get(j).printInfo();
                                                 }
                                                 ClubList.get(i).printInfo();
-                                                return;
+                                                return new TypeNumCouple(FIve,ClubList.get(i).getNUM());
                                             }
                                         }
                                     }
@@ -347,14 +389,14 @@ public class AIDataModel {
                                                 for(int j=0;j<5;j++){
                                                     HeartList.get(j).printInfo();
                                                 }
-                                                return;
+                                                return new TypeNumCouple(FIve,HeartList.get(4).getNUM());
                                             }else {
                                                 //出牌,前四张加上i这张
                                                 for (int j=0;j<4;j++){
                                                     HeartList.get(j).printInfo();
                                                 }
                                                 HeartList.get(i).printInfo();
-                                                return;
+                                                return new TypeNumCouple(FIve,HeartList.get(i).getNUM());
                                             }
                                         }
                                     }
@@ -368,14 +410,14 @@ public class AIDataModel {
                                                 for(int j=0;j<5;j++){
                                                     SpadeList.get(j).printInfo();
                                                 }
-                                                return;
+                                                return new TypeNumCouple(FIve,SpadeList.get(4).getNUM());
                                             }else {
                                                 //出牌,前四张加上i这张
                                                 for (int j=0;j<4;j++){
                                                     SpadeList.get(j).printInfo();
                                                 }
                                                 SpadeList.get(i).printInfo();
-                                                return;
+                                                return new TypeNumCouple(FIve,SpadeList.get(i).getNUM());
                                             }
                                         }
                                     }
@@ -401,7 +443,7 @@ public class AIDataModel {
                                                 for (int x = 0; x < 2; x++) {
                                                     counts[j].number.get(x).printInfo();
                                                 }
-                                                return;
+                                                return new TypeNumCouple(FIve,counts[i].number.get(2).getNUM());
                                             }
                                         }
                                     }
@@ -419,17 +461,17 @@ public class AIDataModel {
                                 int result = counts[i].getBigger(typeNumCouple.getNUM() % 52);
                                 if (result != -1) {//找到比它大的
                                     for (int j = 0; j < counts.length; j++) {
-                                        if (counts[j].counts == 2) {
-                                            if (counts[j].number.size() > 0) {//有对
-                                                //取前三张
-                                                for (int x = 0; x < 3; x++) {
+                                        if (counts[j].counts == 1) {
+                                            if (counts[j].number.size() > 0) {//有单
+                                                //取前四张
+                                                for (int x = 0; x < 4; x++) {
                                                     counts[i].number.get(x).printInfo();
                                                 }
                                                 //取前两张
-                                                for (int x = 0; x < 2; x++) {
+                                                for (int x = 0; x < 1; x++) {
                                                     counts[j].number.get(x).printInfo();
                                                 }
-                                                return;
+                                                return new TypeNumCouple(FIve,counts[i].number.get(3).getNUM());
                                             }
                                         }
                                     }
@@ -440,10 +482,11 @@ public class AIDataModel {
                     case 4://同花顺
 
                     default:
-                        System.out.println("Pass");
-
+                        //System.out.println("Pass");
+                        return typeNumCouple;
                 }
         }
+        return typeNumCouple;
     }
 
 

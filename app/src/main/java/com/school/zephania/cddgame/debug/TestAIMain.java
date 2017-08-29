@@ -32,7 +32,7 @@ public class TestAIMain {
         ai.printHandCards();
         System.out.println("\n");
         ai.deal();
-        ai.sendCards(new TypeNumCouple(CardType.FIve,26));
+        ai.sendCardsHelp(new TypeNumCouple(CardType.FIve,26));
         //ai.showInfo();
         System.out.println("\n");
         ai.printHandCards();
@@ -40,7 +40,7 @@ public class TestAIMain {
 
         ai.init();
         ai.deal();
-        ai.sendCards(new TypeNumCouple(CardType.FIve,26));
+        ai.sendCardsHelp(new TypeNumCouple(CardType.FIve,26));
         //ai.sendCards(exampleTNC);
         System.out.println("\n");
         ai.printHandCards();

@@ -64,4 +64,24 @@ public class ModefiedLog {
      * 其实 counts 的值就是 number.size() 的值,由于使用时可能会出现 类A.类B.成员.函数() 这种复杂的结构,故而拆解,可能到时会重构一下这个类,命名太不规范
      * 在 debug 包中增加了 testAIMain 类作为测试 AI 的主类
      */
+
+    /**
+     * @
+     * 将God中的4个Player改为1个player和3个AI，并将相应绘图函数相应改变
+     * 现在只有player的牌绘出
+     * 完善God中Gaming函数，建立游戏逻辑
+     * 先阶段玩家出牌，AI能够相应出牌，不过有一个bug是比如我出3它好像会直接出最大的
+     */
+
+    /**
+     *@time 2017/8/29 11:48
+     *@author Yuan Qiang
+     * 将God中的4个Player改为1个player和3个AI，并将相应绘图函数相应改变
+     * 现在只有player的牌绘出
+     * 完善God中Gaming函数，建立游戏逻辑
+     * 先阶段玩家出牌，AI能够相应出牌，不过有一个bug是比如我出3它好像会直接出最大的
+     * 可以在调试时查看AI出牌，debug时log标签为AI
+     * 在AI中的sendCardsHelp中，如果输入是FIve,-1的CardType，不会得到预期的结果
+     * 关于界面的一个bug，点击牌之后点击pass，牌不会回落
+     */
 }

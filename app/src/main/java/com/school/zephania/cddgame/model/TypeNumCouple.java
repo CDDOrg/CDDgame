@@ -19,6 +19,10 @@ public class TypeNumCouple {
         this.NUM = NUM;
     }
 
+    public boolean isEqual(TypeNumCouple couple){
+        return cardType == couple.getCardType() && NUM == couple.getNUM();
+    }
+
     public CardType getCardType() {
         return cardType;
     }

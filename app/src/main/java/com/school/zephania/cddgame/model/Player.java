@@ -34,7 +34,8 @@ public class Player {
 
     private boolean sendCardTag = false; //能否出牌的标志，true为能出牌
 
-    private TypeNumCouple couple;
+    private TypeNumCouple last;   //玩家上一轮出的牌
+    private TypeNumCouple couple;  //用于计算牌型
     private ArrayList<Card> selectedCards;
     private ArrayList<Card> sendCards;//出的牌
     private boolean sendState=false;//出牌状态
@@ -46,22 +47,27 @@ public class Player {
         selectedCards = new ArrayList<>();
         sendCards=new ArrayList<>();
         couple = new TypeNumCouple();
+        last = new TypeNumCouple();
     }
     public void addCard(Card card){//往手牌中添牌
         handCards.add(card);
         sortHandCards(handCards);
     }
 
-    public TypeNumCouple sendCard(){//出牌
+    public TypeNumCouple sendCards(){//出牌
         handCards.removeAll(selectedCards);
         getsendCard();//获取出牌-绘图用
         sendState=true;
         sendCardTag = false;
         selectedCards.removeAll(selectedCards);
         sortHandCards(handCards);
-        TypeNumCouple temp = couple;
+
+        last.setCardType(couple.getCardType());
+        last.setNUM(couple.getNUM());
+
         couple.reset();
-        return temp;
+
+        return last;
     }
 
     public void selectCard(Card card){//点击一张牌即选牌
@@ -104,13 +110,13 @@ public class Player {
         }else if (selectedCards.size() == 2){
             if (isEqual(0,1)){
                 couple.setCardType(CardType.Pair);
-                couple.setNUM( selectedCards.get(0).getNUM());
+                couple.setNUM( selectedCards.get(1).getNUM());
                 return;
             }
         }else if (selectedCards.size() == 3){
             if (isEqual(0,1) && isEqual(1,2)){
                 couple.setCardType( CardType.Set);
-                couple.setNUM(selectedCards.get(0).getNUM());
+                couple.setNUM(selectedCards.get(2).getNUM());
                 return;
             }
         }else if (selectedCards.size() == 5){
@@ -162,7 +168,7 @@ public class Player {
     private boolean checkFullHouse(){//检测三带二
         if (isEqual(0,1)){//如果前两张牌相等，那么检测第三张，有两种情况，前三后二，前二后三
             if (isEqual(0,2) && isEqual(3,4)){
-                couple.setNUM(selectedCards.get(0).getNUM() + 52 * 2);
+                couple.setNUM(selectedCards.get(2).getNUM() + 52 * 2);
                 return true;
             }else if (isEqual(2,3) && isEqual(3,4)){
                 couple.setNUM(selectedCards.get(4).getNUM() + 52 * 2);
@@ -303,5 +309,9 @@ public class Player {
     }
     public boolean getSendCardTag(){
         return sendCardTag;
+    }
+
+    public TypeNumCouple getLast() {
+        return last;
     }
 }
