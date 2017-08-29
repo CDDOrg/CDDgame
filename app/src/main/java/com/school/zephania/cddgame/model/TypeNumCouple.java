@@ -39,7 +39,7 @@ public class TypeNumCouple {
         this.NUM = NUM;
     }
 
-    public boolean isBigger(TypeNumCouple couple){//比较两组牌的大小
+    public boolean isBigger(TypeNumCouple couple){//比较两组牌的大小//如果this为null,返回false,如果对方为null,返回true,如果this==对方==null呢?
         if (cardType == CardType.Null){
             return false;
         }

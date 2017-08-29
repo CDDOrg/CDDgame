@@ -1,5 +1,7 @@
 package com.school.zephania.cddgame.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -208,27 +210,34 @@ public class AIDataModel{
     }
 
     public TypeNumCouple sendCards(TypeNumCouple typeNumCouple){
+        Log.d("AI","这个AI 上一手牌出的是不是-1 " + (last.getNUM()==-1) + "不是的化出的牌是 " +(last.getNUM()/4+3));
         if(typeNumCouple.isEqual(last)){  //如果检测到上一轮没有出的比自己上一轮大，说明是自己的回合
+            Log.d("AI","这次的牌跟上次是一样的,说明是自己出的牌,没人要,所以本轮继续是我AI出牌");
             last = sendCardsFirst();
             return last;
         }else{
+            Log.d("AI","不是AI首轮出牌,AI跟牌");
             TypeNumCouple couple = sendCardsHelp(typeNumCouple);
+            Log.d("AI","AI help 返回的牌是" + (couple.getNUM()/4+3));
             if(! couple.isEqual(typeNumCouple)){  //这是说明要的起上一家的牌
                 last = couple;
+                Log.d("AI","这次出牌比上一家的大,AI这次出的牌是 "+ (last.getNUM()/4+3));
+                return couple;
             }
+            Log.d("AI","AI要不起上一家的牌,返回的couple 是" + (couple.getNUM()/4+3));
             return couple;
         }
     }
     //首轮出牌
     public TypeNumCouple sendCardsFirst(){
         TypeNumCouple couple;
-        if( (couple = sendCardsHelp(new TypeNumCouple(FIve,-1)) ).getNUM() == -1){
+        if( (couple = sendCardsHelp(new TypeNumCouple(FIve,-1)) ).getNUM() != -1){
             return couple;
         }
-        if( (couple = sendCardsHelp(new TypeNumCouple(Set,-1)) ).getNUM() == -1){
+        if( (couple = sendCardsHelp(new TypeNumCouple(Set,-1)) ).getNUM() != -1){
             return couple;
         }
-        if( (couple = sendCardsHelp(new TypeNumCouple(Pair,-1)) ).getNUM() == -1){
+        if( (couple = sendCardsHelp(new TypeNumCouple(Pair,-1)) ).getNUM() != -1){
             return couple;
         }
         return sendCardsHelp(new TypeNumCouple(Signal,-1));
@@ -240,7 +249,7 @@ public class AIDataModel{
         int index = -1;
         switch (typeNumCouple.getCardType()){
             case Signal://单张
-                for(int i=0;i<counts.length;i++){
+                for(int i=1;i<counts.length;i++){
                     if(counts[i].counts==1){
                         //System.out.print(" "+ i);
                         tmp = counts[i].getBigger(typeNumCouple.getNUM());
@@ -248,6 +257,12 @@ public class AIDataModel{
                             index = i;
                             break;
                         }
+                    }
+                }
+                if(tmp==-1&&counts[0].counts==1){
+                    tmp = counts[0].getBigger(typeNumCouple.getNUM());
+                    if(tmp!=-1) {
+                        index = 0;
                     }
                 }
                 if(tmp==-1){

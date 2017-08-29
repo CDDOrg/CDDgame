@@ -79,6 +79,8 @@ public class God extends Activity {
     }
     private void init(){
         distributeCards();
+        //print player card info
+        //player.printCardInfo();
         currentPlayer=0;
         viewInit();
     }
@@ -213,15 +215,17 @@ public class God extends Activity {
     }//游戏运行时逻辑
     private void AISendCards(){
         for(int i=0;i<3;i++){
+            Log.d("AI","before ai[]"+i+"出牌, maxTypeNumCouple is "+ (maxTypeNumCouple.getNUM()/4+3));
             maxTypeNumCouple = AIs[i].sendCards(maxTypeNumCouple);
-            Log.d("AI","AI"+i+"出牌: "+maxTypeNumCouple.getCardType()+"  "+maxTypeNumCouple.getNUM()+"");
+            Log.d("AI","AI"+i+"出牌: "+maxTypeNumCouple.getCardType()+"  "+maxTypeNumCouple.getNUM()+""+" 牌面是 " + (maxTypeNumCouple.getNUM()/4+3));
         }
     }
     private void dealWithChupai(){
         //maxTypeNumCouple = players[0].sendCards(new TypeNumCouple());
-        maxTypeNumCouple = player.sendCards();
-        Log.d("AI", "玩家出牌："+maxTypeNumCouple.getCardType()+"  "+maxTypeNumCouple.getNUM()+"");
-        player.setSendCardTag(false);
+        maxTypeNumCouple = player.sendCards();//调用玩家的出牌函数,返回玩家出的牌中最大的牌
+        //Log.d("AI","玩家出牌了,maxTypeNumCouple is " + (maxTypeNumCouple.getNUM()/4+3));
+        Log.d("AI", "人类玩家出牌："+maxTypeNumCouple.getCardType()+"  "+maxTypeNumCouple.getNUM()+" 牌面是 " + (maxTypeNumCouple.getNUM()/4+3));
+        player.setSendCardTag(false);//设置玩家不能出牌
         isPlayerTurn = false;
     }//出牌的响应函数
     private void dealWithPass(){
@@ -245,16 +249,21 @@ public class God extends Activity {
     }
 
     public void onTouch(View v, MotionEvent event){
-        if(!isPlayerTurn)
+        Log.d("AI","玩家点击屏幕了");
+        if(!isPlayerTurn) {
+            Log.d("AI", "此时is not player turn");
             return;
-
+        }
+        Log.d("AI", "此时is player turn");
         int x=(int)event.getX();
         int y=(int)event.getY();
-
+        Log.d("AI","player能不能出牌" + player.getSendCardTag());
         if (chupaiDst.contains(x,y)&&player.getSendCardTag()) {
+            Log.d("AI","人类玩家出牌");
             dealWithChupai();
         }
         if (passDst.contains(x,y)) {
+            Log.d("AI","pass了");
             dealWithPass();
         }
         player.onTouch(v,event, maxTypeNumCouple);

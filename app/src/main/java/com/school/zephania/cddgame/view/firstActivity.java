@@ -47,35 +47,6 @@ public class firstActivity extends AppCompatActivity {
                 finish();
             }
         });
-        /*
-        button4.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                switch (v.getId()){
-                    case R.id.button_4:
-                        AlertDialog.Builder waitACK = new AlertDialog.Builder(firstActivity.this);
-                        waitACK.setTitle("确定要退出游戏吗？");
-                        waitACK.setMessage("您将有可能丢失当前游戏信息！");
-                        waitACK.setCancelable(true);
-                        waitACK.setPositiveButton("确定",new DialogInterface.
-                                OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface waitACK,int which){
-                                finish();
-                            }
-                        });
-                        waitACK.setNegativeButton("取消",new DialogInterface.
-                                OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface waitACK,int which){}
-                        });
-                        waitACK.show();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });*/
      }
 
     @Override
@@ -115,19 +86,6 @@ public class firstActivity extends AppCompatActivity {
         }
         super.onResume();
     }
-
-    public class BackKeyTest extends Activity
-    {
-        /** Called when the activity is first created. */
-       /* @Override
-        public void onCreate(Bundle savedInstanceState)
-        {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_first);
-
-        }*/
-    }
-
 
     protected void hideActionBar() {
         // Hide UI

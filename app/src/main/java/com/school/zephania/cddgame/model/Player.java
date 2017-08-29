@@ -314,4 +314,10 @@ public class Player {
     public TypeNumCouple getLast() {
         return last;
     }
+
+    public void printCardInfo(){
+        for (int i = 0; i < handCards.size(); i++) {
+            handCards.get(i).printInfo();
+        }
+    }
 }
