@@ -1,0 +1,100 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context="com.example.hpcdo.cdd_pc.GuideActivity" >
+
+
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@drawable/bgchoose1"
+        android:scaleType="fitCenter"
+        android:visibility="visible"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+
+    <ImageButton
+        android:id="@+id/radiobutton5"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/radio"
+        android:button="@null"
+        android:layout_marginBottom="128dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginEnd="83dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:id="@+id/radiobutton4"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/radio"
+        android:button="@null"
+        android:layout_marginBottom="128dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginEnd="235dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:id="@+id/radiobutton3"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/radio"
+        android:button="@null"
+        android:layout_marginBottom="128dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginEnd="392dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:id="@+id/radiobutton2"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/radio"
+        android:button="@null"
+        android:layout_marginBottom="128dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginEnd="506dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <ImageButton
+        android:id="@+id/radiobutton1"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/radio"
+        android:button="@null"
+        android:layout_marginBottom="128dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginEnd="618dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:id="@+id/push"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btnchoose"
+        android:text="确认"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="55dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginBottom="22dp" />
+
+</RelativeLayout>
