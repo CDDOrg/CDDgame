@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.GuideActivity" />
-        <activity android:name=".model.God" />
+        <activity android:name=".model.God"/>
     </application>
 
 </manifest>

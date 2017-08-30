@@ -18,6 +18,8 @@ import static com.school.zephania.cddgame.model.Card.cardWidth;
 import static com.school.zephania.cddgame.model.God.cardMargin;
 import static com.school.zephania.cddgame.model.God.mHeight;
 import static com.school.zephania.cddgame.model.God.mWidth;
+import static com.school.zephania.cddgame.model.God.turn;
+import static com.school.zephania.cddgame.model.God.turnType.RIGHT;
 import static java.lang.Thread.sleep;
 
 
@@ -253,10 +255,11 @@ public class Player {
         }
         if(threadcontrol){
             try {
-                sleep(1000);
+                sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            turn= RIGHT;
             threadcontrol=false;
         }
         if(sendState){
@@ -314,7 +317,9 @@ public class Player {
     public TypeNumCouple getLast() {
         return last;
     }
-
+    public void cancelSelected() {
+        selectedCards.removeAll(selectedCards);
+    }
     public void printCardInfo(){
         for (int i = 0; i < handCards.size(); i++) {
             handCards.get(i).printInfo();

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -18,8 +19,9 @@ import android.view.WindowManager;
 
 import com.school.zephania.cddgame.R;
 import com.school.zephania.cddgame.view.GameView;
-
 import java.util.Random;
+
+import static android.os.SystemClock.*;
 
 
 /**
@@ -37,9 +39,10 @@ public class God extends Activity {
 
     private AIDataModel[] AIs = new AIDataModel[4]; //三个AI
     private Player player = new Player();  //一个玩家
-    private boolean isPlayerTurn = true;   //是否轮到玩家出牌
-
-
+    public static enum turnType {UP,DOWN,LEFT,RIGHT};
+    public static boolean isPlayerTurn=true;
+    public static turnType turn=turnType.DOWN;
+    public static boolean finish=false;
     private Player[] players= new Player[4];
 
     private TypeNumCouple maxTypeNumCouple;//当前场上最大的牌组
@@ -104,9 +107,9 @@ public class God extends Activity {
         passSrc= new Rect(0,0,pass.getWidth(),pass.getHeight());
         passDst= new Rect(mWidth*10/20,mHeight*4/6-30,mWidth*10/20+chupai.getWidth()/2,chupai.getHeight()/2+mHeight*4/6-30);
         //设定头像区域
-        players[3].setView(10,mHeight/4);
-        players[2].setView(mWidth*5/20,10);
-        players[1].setView(mWidth*18/20,mHeight/4);
+        AIs[2].setView(10,mHeight/4);
+        AIs[1].setView(mWidth*5/20,10);
+        AIs[0].setView(mWidth*18/20,mHeight/4);
        // players[0].setView(mWidth*5/20,mHeight*3/4);
         player.setView(mWidth*5/20,mHeight*3/4);
         //player.setView(mWidth*5/20,mHeight*3/4);
@@ -163,17 +166,16 @@ public class God extends Activity {
         canvas.drawBitmap(gameBackGround,BackSrc,BackDst,null);
         //画人物
         player.paint(canvas);
-        for (int i=1;i<4;i++)
+        for (int i=0;i<3;i++)
         {
-            players[i].paint(canvas);
+            AIs[i].paint(canvas);
         }
         //画牌
         player.paintCards(canvas, Player.Mode.DOWN);
 
-       // players[0].paintCards(canvas, Player.Mode.DOWN);
-      //  players[1].paintCards(canvas, Player.Mode.RIGHT);
-      //  players[2].paintCards(canvas, Player.Mode.UP);
-      //  players[3].paintCards(canvas, Player.Mode.LEFT);
+         AIs[0].paintCards(canvas, Player.Mode.RIGHT);
+         AIs[1].paintCards(canvas, Player.Mode.UP);
+         AIs[2].paintCards(canvas, Player.Mode.LEFT);
         //画按钮
         if(isPlayerTurn){
             if(player.getSendCardTag())
@@ -210,16 +212,33 @@ public class God extends Activity {
                 maxTypeNumCouple.reset();
             return;
         }
-        AISendCards();
-        isPlayerTurn = true;
-    }//游戏运行时逻辑
-    private void AISendCards(){
-        for(int i=0;i<3;i++){
-            Log.d("AI","before ai[]"+i+"出牌, maxTypeNumCouple is "+ (maxTypeNumCouple.getNUM()/4+3));
-            maxTypeNumCouple = AIs[i].sendCards(maxTypeNumCouple);
-            Log.d("AI","AI"+i+"出牌: "+maxTypeNumCouple.getCardType()+"  "+maxTypeNumCouple.getNUM()+""+" 牌面是 " + (maxTypeNumCouple.getNUM()/4+3));
+        switch (turn){
+            case RIGHT:
+                if(finish){
+                    break;
+                }
+                Log.d("AI","before ai[]"+0+"出牌, maxTypeNumCouple is "+ (maxTypeNumCouple.getNUM()/4+3));
+                maxTypeNumCouple = AIs[0].sendCards(maxTypeNumCouple);
+                Log.d("AI","AI"+0+"出牌: "+maxTypeNumCouple.getCardType()+"  "+maxTypeNumCouple.getNUM()+""+" 牌面是 " + (maxTypeNumCouple.getNUM()/4+3));
+                break;
+            case UP:
+                if(finish){
+                    break;
+                }
+                Log.d("AI","before ai[]"+1+"出牌, maxTypeNumCouple is "+ (maxTypeNumCouple.getNUM()/4+3));
+                maxTypeNumCouple = AIs[1].sendCards(maxTypeNumCouple);
+                Log.d("AI","AI"+1+"出牌: "+maxTypeNumCouple.getCardType()+"  "+maxTypeNumCouple.getNUM()+""+" 牌面是 " + (maxTypeNumCouple.getNUM()/4+3));
+                break;
+            case LEFT:
+                if(finish){
+                    break;
+                }
+                Log.d("AI","before ai[]"+2+"出牌, maxTypeNumCouple is "+ (maxTypeNumCouple.getNUM()/4+3));
+                maxTypeNumCouple = AIs[2].sendCards(maxTypeNumCouple);
+                Log.d("AI","AI"+2+"出牌: "+maxTypeNumCouple.getCardType()+"  "+maxTypeNumCouple.getNUM()+""+" 牌面是 " + (maxTypeNumCouple.getNUM()/4+3));
+                break;
         }
-    }
+    }//游戏运行时逻辑
     private void dealWithChupai(){
         //maxTypeNumCouple = players[0].sendCards(new TypeNumCouple());
         maxTypeNumCouple = player.sendCards();//调用玩家的出牌函数,返回玩家出的牌中最大的牌
@@ -230,7 +249,9 @@ public class God extends Activity {
     }//出牌的响应函数
     private void dealWithPass(){
   //      turn();
+        player.cancelSelected();
         isPlayerTurn = false;
+        turn=turnType.RIGHT;
     }//pass的响应函数
     private void turn(){//下一位玩家出牌
         currentPlayer = (currentPlayer+1)%4;

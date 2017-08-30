@@ -1,23 +1,46 @@
 package com.school.zephania.cddgame.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
+
+import com.school.zephania.cddgame.R;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static com.school.zephania.cddgame.model.Card.cardHeight;
+import static com.school.zephania.cddgame.model.Card.cardWidth;
 import static com.school.zephania.cddgame.model.CardType.FIve;
 import static com.school.zephania.cddgame.model.CardType.Null;
 import static com.school.zephania.cddgame.model.CardType.Pair;
 import static com.school.zephania.cddgame.model.CardType.Set;
 import static com.school.zephania.cddgame.model.CardType.Signal;
+import static com.school.zephania.cddgame.model.God.cardMargin;
+import static com.school.zephania.cddgame.model.God.finish;
+import static com.school.zephania.cddgame.model.God.isPlayerTurn;
+import static com.school.zephania.cddgame.model.God.mHeight;
+import static com.school.zephania.cddgame.model.God.mWidth;
+import static com.school.zephania.cddgame.model.God.turn;
+import static java.lang.Thread.sleep;
 
 /**
  * Created by user0308 on 6/5/17.
  */
 
 public class AIDataModel{
+    private Bitmap head;
+    private int x;
+    private int y;
+    private String name= "binke";
     private ArrayList<Card> handCards;//手牌
-    //private HandCards handcards;
+    private ArrayList<Card> sendCards;//出牌
+    private boolean sendState=false;//出牌状态
+    public enum Mode{RIGHT,LEFT,UP,DOWN};//绘拍模式
 
     private int maxCardNumber;       //相同牌型时，该值越大牌越大
     private CardType currentType = CardType.Null;      //当前选牌的牌型
@@ -38,6 +61,8 @@ public class AIDataModel{
 
     public AIDataModel(){
         handCards = new ArrayList<>();
+        sendCards = new ArrayList<>();
+        sendState=false;
         for(int i=0;i<13;i++){
             counts[i] = new Couple();
         }
@@ -214,17 +239,34 @@ public class AIDataModel{
         if(typeNumCouple.isEqual(last)){  //如果检测到上一轮没有出的比自己上一轮大，说明是自己的回合
             Log.d("AI","这次的牌跟上次是一样的,说明是自己出的牌,没人要,所以本轮继续是我AI出牌");
             last = sendCardsFirst();
+            sendState=true;
+            finish=true;
             return last;
         }else{
             Log.d("AI","不是AI首轮出牌,AI跟牌");
             TypeNumCouple couple = sendCardsHelp(typeNumCouple);
             Log.d("AI","AI help 返回的牌是" + (couple.getNUM()/4+3));
+
             if(! couple.isEqual(typeNumCouple)){  //这是说明要的起上一家的牌
                 last = couple;
                 Log.d("AI","这次出牌比上一家的大,AI这次出的牌是 "+ (last.getNUM()/4+3));
+                sendState=true;
+                finish=true;
                 return couple;
             }
             Log.d("AI","AI要不起上一家的牌,返回的couple 是" + (couple.getNUM()/4+3));
+            switch (mode){
+                case UP:
+                    turn= God.turnType.LEFT;
+                    break;
+                case RIGHT:
+                    turn= God.turnType.UP;
+                    break;
+                case LEFT:
+                    turn= God.turnType.DOWN;
+                    isPlayerTurn=true;
+                    break;
+            }
             return couple;
         }
     }
@@ -271,7 +313,9 @@ public class AIDataModel{
                 }
                 else{
                     System.out.println("Single "+ tmp);//出了这张牌,还要将它从手牌中remove
-                    handCards.remove(counts[index].number.get(0));
+                    Card card=counts[index].number.get(0);
+                    handCards.remove(card);
+                    sendCards.add(card);
                     counts[index].counts-=1;
                     return new TypeNumCouple(Signal,tmp);
                 }
@@ -293,8 +337,12 @@ public class AIDataModel{
                 }
                 else{
                     System.out.println("Pair "+ tmp);
-                    handCards.remove(counts[index].number.get(0));
-                    handCards.remove(counts[index].number.get(1));
+                    Card card=counts[index].number.get(0);
+                    handCards.remove(card);
+                    sendCards.add(card);
+                    card=counts[index].number.get(1);
+                    handCards.remove(card);
+                    sendCards.add(card);
                     counts[index].counts-=2;
                     return new TypeNumCouple(Pair,tmp);
                 }
@@ -316,9 +364,15 @@ public class AIDataModel{
                 }
                 else{
                     System.out.println("Three "+ tmp);
-                    handCards.remove(counts[index].number.get(0));
-                    handCards.remove(counts[index].number.get(1));
-                    handCards.remove(counts[index].number.get(2));
+                    Card card=counts[index].number.get(0);
+                    handCards.remove(card);
+                    sendCards.add(card);
+                    card=counts[index].number.get(1);
+                    handCards.remove(card);
+                    sendCards.add(card);
+                    card=counts[index].number.get(2);
+                    handCards.remove(card);
+                    sendCards.add(card);
                     counts[index].counts-=3;
                     return new TypeNumCouple(Set,tmp);
                 }
@@ -337,9 +391,12 @@ public class AIDataModel{
                                     }
                                     //比它大,且不为第一张的2
                                     //出了这五张牌,j,j+5,其实应该是hangcard.remove
+                                    Card tempCard;
                                     for(int x=0;x<5;x++){
                                         flush.get(i+x).printInfo();
-                                        handCards.remove(flush.get(i+x));
+                                        tempCard=flush.get(i+x);
+                                        handCards.remove(tempCard);
+                                        sendCards.add(tempCard);
                                     }
                                     /*handCards.remove(flush.get(j));
                                     handCards.remove(flush.get(j+1));
@@ -653,5 +710,88 @@ public class AIDataModel{
             tmp.printInfo();
         }
     }
+
+    // view about function
+    public void setView(int x, int y) {
+        head= BitmapFactory.decodeResource(God.sContext.getResources(), R.drawable.headbinke);
+        this.x=x;
+        this.y=y;
+    }
+    public void paint(Canvas canvas){
+        //画头像
+        Rect src = new Rect(80,0,head.getWidth(),head.getHeight());
+        Rect dst = new Rect(x,y,x+(head.getWidth()-85)*3/5,y+head.getHeight()*3/5);
+        canvas.drawBitmap(head,src,dst,null);
+        //画名字
+        Paint textpaint=new Paint();
+        textpaint.setColor(Color.BLACK);
+        textpaint.setStyle(Paint.Style.FILL);
+        textpaint.setTextSize(40);
+        textpaint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(name,dst.centerX(),dst.bottom-15,textpaint);
+    }
+    public boolean threadcontrol=false;//控制绘屏进程用
+    private Player.Mode mode;
+    void paintCards(Canvas canvas,Player.Mode m){
+        mode =m;
+        switch (mode){
+            case DOWN:
+                for (int i=0;i<handCards.size();i++){
+                    handCards.get(i).paint(canvas,x+200+cardMargin*i,y,false);
+                }
+                break;
+            case UP:
+                for (int i=0;i<handCards.size();i++){
+                    handCards.get(i).paint(canvas,x+200+cardMargin/2*i,y,true);
+                }
+                break;
+            case RIGHT:
+                for (int i=0;i<handCards.size();i++){
+                    handCards.get(i).paint(canvas,x-200,y+cardMargin/2*i,true);
+                }
+                break;
+            case LEFT:
+                for (int i=0;i<handCards.size();i++){
+                    handCards.get(i).paint(canvas,x+200,y+cardMargin/2*i,true);
+                }
+                break;
+        }
+        if(threadcontrol){
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            switch (mode){
+                case UP:
+                    turn= God.turnType.LEFT;
+                    finish=false;
+                    break;
+                case RIGHT:
+                    turn= God.turnType.UP;
+                    finish=false;
+                    break;
+                case LEFT:
+                    turn= God.turnType.DOWN;
+                    finish=false;
+                    isPlayerTurn=true;
+                    break;
+            }
+            threadcontrol=false;
+        }
+        if(sendState){
+            paintChupai(canvas);
+            sendState=false;
+            threadcontrol=true;
+            sendCards.removeAll(sendCards);
+        }
+    }
+    public void paintChupai(Canvas canvas){
+        int length=(sendCards.size()-1)*cardMargin+cardWidth;
+        for (int i=0;i<sendCards.size();i++){
+            sendCards.get(i).paint(canvas,(mWidth-length)/2+i*cardMargin,(mHeight-cardHeight)/2,false);
+        }
+    }
 }
+
 
