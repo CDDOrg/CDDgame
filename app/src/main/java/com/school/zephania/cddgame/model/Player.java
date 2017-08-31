@@ -318,7 +318,9 @@ public class Player {
         return last;
     }
     public void cancelSelected() {
-        selectedCards.removeAll(selectedCards);
+        for(Card card:handCards){
+            cancleCard(card);
+        }
     }
     public void printCardInfo(){
         for (int i = 0; i < handCards.size(); i++) {

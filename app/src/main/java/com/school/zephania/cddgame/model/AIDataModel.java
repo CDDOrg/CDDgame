@@ -235,6 +235,8 @@ public class AIDataModel{
     }
 
     public TypeNumCouple sendCards(TypeNumCouple typeNumCouple){
+        init();
+        deal();
         Log.d("AI","这个AI 上一手牌出的是不是-1 " + (last.getNUM()==-1) + "不是的化出的牌是 " +(last.getNUM()/4+3));
         if(typeNumCouple.isEqual(last)){  //如果检测到上一轮没有出的比自己上一轮大，说明是自己的回合
             Log.d("AI","这次的牌跟上次是一样的,说明是自己出的牌,没人要,所以本轮继续是我AI出牌");
@@ -391,22 +393,20 @@ public class AIDataModel{
                                     }
                                     //比它大,且不为第一张的2
                                     //出了这五张牌,j,j+5,其实应该是hangcard.remove
+                                    int number = flush.get(i+4).getNUM();
                                     Card tempCard;
                                     for(int x=0;x<5;x++){
                                         flush.get(i+x).printInfo();
                                         tempCard=flush.get(i+x);
-                                        handCards.remove(tempCard);
                                         sendCards.add(tempCard);
+                                        handCards.remove(tempCard);
                                     }
-                                    /*handCards.remove(flush.get(j));
-                                    handCards.remove(flush.get(j+1));
-                                    handCards.remove(flush.get(j+2));
-                                    handCards.remove(flush.get(j+3));
-                                    handCards.remove(flush.get(j+4));*/
-                                    return new TypeNumCouple(FIve,flush.get(i+4).getNUM());//出完牌就结束这个函数
+
+                                    return new TypeNumCouple(FIve,number + 0 * 52);//出完牌就结束这个函数
                                 }
                             }
                         }
+
 
                     case 1://同花
                         switch (typeNumCouple.getNUM()%4){
@@ -416,17 +416,25 @@ public class AIDataModel{
                                         if(DiamondList.get(i).compeareTo(new Card(typeNumCouple.getNUM()%52))){//true is bigger
                                             if(i<5){//在前五张中有比上家大的牌
                                                 //出牌 DiamondList的前五张
+                                                int number = DiamondList.get(4).getNUM();
                                                 for(int j=0;j<5;j++){
                                                     DiamondList.get(j).printInfo();
+                                                    sendCards.add(DiamondList.get(j));
+                                                    handCards.remove(DiamondList.get(j));
                                                 }
-                                                return new TypeNumCouple(FIve,DiamondList.get(4).getNUM());//结束,不再继续找下去
+                                                return new TypeNumCouple(FIve,number + 1 * 52);//结束,不再继续找下去
                                             }else {
                                                 //出牌,前四张加上i这张
+                                                int number = DiamondList.get(i).getNUM();
+                                                DiamondList.get(i).printInfo();
+                                                sendCards.add(DiamondList.get(i));
+                                                handCards.remove(DiamondList.get(i));
                                                 for (int j=0;j<4;j++){
                                                     DiamondList.get(j).printInfo();
+                                                    sendCards.add(DiamondList.get(j));
+                                                    handCards.remove(DiamondList.get(j));
                                                 }
-                                                DiamondList.get(i).printInfo();
-                                                return new TypeNumCouple(FIve,DiamondList.get(i).getNUM());//结束,不再继续
+                                                return new TypeNumCouple(FIve,number + 1 * 52);//结束,不再继续
                                             }
                                         }
                                     }
@@ -437,17 +445,25 @@ public class AIDataModel{
                                         if(ClubList.get(i).compeareTo(new Card(typeNumCouple.getNUM()%52))){//true is bigger
                                             if(i<5){//在前五张中有比上家大的牌
                                                 //出牌 ClubList的前五张
+                                                int number = ClubList.get(4).getNUM();
                                                 for(int j=0;j<5;j++){
                                                     ClubList.get(j).printInfo();
+                                                    sendCards.add(ClubList.get(j));
+                                                    handCards.remove(ClubList.get(j));
                                                 }
-                                                return new TypeNumCouple(FIve,ClubList.get(4).getNUM());
+                                                return new TypeNumCouple(FIve,number + 1 * 52);
                                             }else {
                                                 //出牌,前四张加上i这张
+                                                int number = ClubList.get(i).getNUM();
+                                                ClubList.get(i).printInfo();
+                                                sendCards.add(ClubList.get(i));
+                                                handCards.remove(ClubList.get(i));
                                                 for (int j=0;j<4;j++){
                                                     ClubList.get(j).printInfo();
+                                                    sendCards.add(ClubList.get(j));
+                                                    handCards.remove(ClubList.get(j));
                                                 }
-                                                ClubList.get(i).printInfo();
-                                                return new TypeNumCouple(FIve,ClubList.get(i).getNUM());
+                                                return new TypeNumCouple(FIve,number + 1 * 52);
                                             }
                                         }
                                     }
@@ -458,17 +474,25 @@ public class AIDataModel{
                                         if(HeartList.get(i).compeareTo(new Card(typeNumCouple.getNUM()%52))){//true is bigger
                                             if(i<5){//在前五张中有比上家大的牌
                                                 //出牌 HeartList的前五张
+                                                int number = HeartList.get(4).getNUM();
                                                 for(int j=0;j<5;j++){
                                                     HeartList.get(j).printInfo();
+                                                    sendCards.add(HeartList.get(j));
+                                                    handCards.remove(HeartList.get(j));
                                                 }
-                                                return new TypeNumCouple(FIve,HeartList.get(4).getNUM());
+                                                return new TypeNumCouple(FIve,number + 1 * 52);
                                             }else {
                                                 //出牌,前四张加上i这张
+                                                int number = HeartList.get(i).getNUM();
+                                                HeartList.get(i).printInfo();
+                                                sendCards.add(HeartList.get(i));
+                                                handCards.remove(HeartList.get(i));
                                                 for (int j=0;j<4;j++){
                                                     HeartList.get(j).printInfo();
+                                                    sendCards.add(HeartList.get(j));
+                                                    handCards.remove(HeartList.get(j));
                                                 }
-                                                HeartList.get(i).printInfo();
-                                                return new TypeNumCouple(FIve,HeartList.get(i).getNUM());
+                                                return new TypeNumCouple(FIve,number + 1 * 52);
                                             }
                                         }
                                     }
@@ -479,17 +503,26 @@ public class AIDataModel{
                                         if(SpadeList.get(i).compeareTo(new Card(typeNumCouple.getNUM()%52))){//true is bigger
                                             if(i<5){//在前五张中有比上家大的牌
                                                 //出牌 SpadeList的前五张
+                                                int number = SpadeList.get(4).getNUM();
                                                 for(int j=0;j<5;j++){
                                                     SpadeList.get(j).printInfo();
+                                                    sendCards.add(SpadeList.get(j));
+                                                    handCards.remove(SpadeList.get(j));
                                                 }
-                                                return new TypeNumCouple(FIve,SpadeList.get(4).getNUM());
+                                                return new TypeNumCouple(FIve,number + 1 * 52);
                                             }else {
                                                 //出牌,前四张加上i这张
+                                                int number = SpadeList.get(i).getNUM();
+                                                SpadeList.get(i).printInfo();
+                                                sendCards.add(SpadeList.get(i));
+                                                handCards.remove(SpadeList.get(i));
                                                 for (int j=0;j<4;j++){
                                                     SpadeList.get(j).printInfo();
+                                                    sendCards.add(SpadeList.get(j));
+                                                    handCards.remove(SpadeList.get(j));
                                                 }
-                                                SpadeList.get(i).printInfo();
-                                                return new TypeNumCouple(FIve,SpadeList.get(i).getNUM());
+
+                                                return new TypeNumCouple(FIve, number + 1 * 52);
                                             }
                                         }
                                     }
@@ -508,14 +541,19 @@ public class AIDataModel{
                                         if (counts[j].counts == 2) {
                                             if (counts[j].number.size() > 0) {//有对
                                                 //取前三张
+                                                int number = counts[i].number.get(2).getNUM();
                                                 for (int x = 0; x < 3; x++) {
                                                     counts[i].number.get(x).printInfo();
+                                                    sendCards.add(counts[i].number.get(x));
+                                                    handCards.remove(counts[i].number.get(x));
                                                 }
                                                 //取前两张
                                                 for (int x = 0; x < 2; x++) {
                                                     counts[j].number.get(x).printInfo();
+                                                    sendCards.add(counts[j].number.get(x));
+                                                    handCards.remove(counts[j].number.get(x));
                                                 }
-                                                return new TypeNumCouple(FIve,counts[i].number.get(2).getNUM());
+                                                return new TypeNumCouple(FIve,number + 2 * 52);
                                             }
                                         }
                                     }
@@ -536,14 +574,19 @@ public class AIDataModel{
                                         if (counts[j].counts == 1) {
                                             if (counts[j].number.size() > 0) {//有单
                                                 //取前四张
+                                                int number = counts[i].number.get(3).getNUM();
                                                 for (int x = 0; x < 4; x++) {
                                                     counts[i].number.get(x).printInfo();
+                                                    sendCards.add(counts[i].number.get(x));
+                                                    handCards.remove(counts[i].number.get(x));
                                                 }
-                                                //取前两张
+                                                //取前一张
                                                 for (int x = 0; x < 1; x++) {
                                                     counts[j].number.get(x).printInfo();
+                                                    sendCards.add(counts[j].number.get(x));
+                                                    handCards.remove(counts[j].number.get(x));
                                                 }
-                                                return new TypeNumCouple(FIve,counts[i].number.get(3).getNUM());
+                                                return new TypeNumCouple(FIve,number + 3 * 52);
                                             }
                                         }
                                     }

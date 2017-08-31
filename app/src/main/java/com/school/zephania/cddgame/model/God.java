@@ -133,10 +133,11 @@ public class God extends Activity {
                 if(j==0){
                     player.addCard(new Card(cards[i]));
                 }else {
-                    AIs[j - 1].addCard(new Card(cards[i]));
+                    AIs[j - 1].addCard(new Card(cards[i+j]));
                 }
             }
         }
+
         for(int i=0;i<3;i++){
             AIs[i].init();
             AIs[i].deal();

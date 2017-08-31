@@ -72,6 +72,7 @@ public class Card {
             y=y-25;
         }
         dst = new Rect(x,y,cardmap.getWidth()*3/4+x,cardmap.getHeight()*3/4+y);
+        isAI = false;
         if (!isAI){
         canvas.drawBitmap(cardmap,rsc,dst,null);
         }
